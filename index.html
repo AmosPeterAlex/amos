@@ -1,256 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <!-- SEO Basics -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Amos P Alex - Flutter Developer | Cross-Platform Mobile Apps</title>
-  <meta name="description" content="Flutter Developer with 2 years of experience building scalable cross-platform applications. Specialized in clean architecture, GraphQL, and performance optimization.">
-  <meta name="keywords" content="Flutter Developer, Dart, Mobile App Development, Cross-Platform, GraphQL, Clean Architecture, Amos P Alex">
-  <meta name="author" content="Amos P Alex">
-  <link rel="canonical" href="https://amospalex.com/">
-  
-  <!-- Open Graph -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://amospalex.com/">
-  <meta property="og:title" content="Amos P Alex - Flutter Developer">
-  <meta property="og:description" content="Flutter Developer specializing in cross-platform mobile apps, clean architecture, and performance optimization.">
-  <meta property="og:image" content="https://amospalex.com/assets/preview.jpg">
-  
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Amos P Alex - Flutter Developer">
-  <meta name="twitter:description" content="Flutter Developer specializing in cross-platform mobile apps, clean architecture, and performance optimization.">
-  <meta name="twitter:image" content="https://amospalex.com/assets/preview.jpg">
-  
-  <!-- Theme Color -->
-  <meta name="theme-color" content="#1a365d" id="theme-color-meta">
-  
-  <!-- PWA -->
-  <link rel="manifest" href="/manifest.json">
-  <link rel="icon" href="/assets/icon/favicon.ico">
-  
-  <!-- Styles -->
-  <link rel="stylesheet" href="styles/styles.css">
-  
-  <!-- Google Material Icons -->
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  <title>Amos P Alex - Portfolio</title>
+  <meta name="description" content="Portfolio of Amos P Alex - Flutter Developer & Creative Coder">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  
-  <!-- Navigation -->
-  <nav class="navbar" role="navigation" aria-label="Main navigation">
-    <div class="container">
-      <div class="nav-brand">
-        <a href="#home" class="logo">Amos P Alex</a>
-      </div>
-      
-      <button class="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false">
-        <span class="material-icons">menu</span>
-      </button>
-      
-      <ul class="nav-links">
-        <li><a href="#home">Home</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#experience">Experience</a></li>
-        <li><a href="#skills">Skills</a></li>
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-      
-      <button class="theme-toggle" aria-label="Toggle theme">
-        <span class="material-icons">light_mode</span>
-      </button>
-    </div>
+  <canvas id="particle-canvas"></canvas>
+
+  <div class="theme-transition-overlay"></div>
+
+  <nav class="navbar">
+    <div class="logo">Amos.</div>
+    <button id="theme-toggle" class="theme-btn" aria-label="Toggle Theme">
+      <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"></circle>
+        <line x1="12" y1="1" x2="12" y2="3"></line>
+        <line x1="12" y1="21" x2="12" y2="23"></line>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+        <line x1="1" y1="12" x2="3" y2="12"></line>
+        <line x1="21" y1="12" x2="23" y2="12"></line>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+      </svg>
+      <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
   </nav>
 
-  <!-- Hero Section -->
-  <section id="home" class="hero">
-    <div class="container">
-      <div class="hero-content fade-in">
-        <p class="hero-greeting"></p>
-        <h1 class="hero-title"></h1>
-        <div class="typing-container">
-          <span class="typing-text"></span>
-          <span class="typing-cursor">|</span>
-        </div>
-        <p class="hero-description"></p>
-        
-        <div class="hero-cta">
-          <a href="#" class="cta-button primary"></a>
-          <a href="#contact" class="cta-button secondary">Get In Touch</a>
-        </div>
-        
-        <div class="hero-social">
-          <a href="#" data-social="linkedin" aria-label="LinkedIn" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" width="24" height="24">
-              <path fill="currentColor" d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
-            </svg>
-          </a>
-          <a href="#" data-social="github" aria-label="GitHub" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" width="24" height="24">
-              <path fill="currentColor" d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/>
-            </svg>
-          </a>
-          <a href="#" data-social="email" aria-label="Email">
-            <span class="material-icons">email</span>
-          </a>
-          <a href="#" data-social="phone" aria-label="Phone">
-            <span class="material-icons">phone</span>
-          </a>
-        </div>
+  <main class="hero">
+    <div class="hero-content">
+      <h1 class="hero-title">Amos P Alex</h1>
+      <p class="hero-subtitle">Frontend &amp; Flutter Developer</p>
+      <div class="hero-actions">
+        <a href="#work" class="btn primary">View Work</a>
+        <a href="#contact" class="btn secondary">Contact</a>
       </div>
     </div>
-    <div class="hero-scroll-indicator">
-      <span class="material-icons">expand_more</span>
-    </div>
-  </section>
+  </main>
 
-  <!-- About Section -->
-  <section id="about" class="about">
-    <div class="container">
-      <h2 class="section-title fade-in">About Me</h2>
-      <div class="about-content">
-        <div class="about-text slide-in-left">
-          <div class="about-paragraphs"></div>
-        </div>
-        
-        <div class="about-values slide-in-right">
-          <div class="value-card">
-            <span class="material-icons">workspace_premium</span>
-            <h3>Core Values</h3>
-            <div class="values-content"></div>
-          </div>
-          
-          <div class="value-card">
-            <span class="material-icons">emoji_events</span>
-            <h3>Goals</h3>
-            <div class="goals-content"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Experience Section -->
-  <section id="experience" class="experience">
-    <div class="container">
-      <h2 class="section-title fade-in">Professional Experience</h2>
-      
-      <div class="experience-tabs">
-        <div class="tab-buttons" role="tablist"></div>
-        <div class="tab-content"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Skills Section -->
-  <section id="skills" class="skills">
-    <div class="container">
-      <h2 class="section-title fade-in">Technical Skills</h2>
-      <div id="skills-root" class="skills-new fade-in"></div>
-    </div>
-  </section>
-
-  <!-- Projects Section -->
-  <section id="projects" class="projects">
-    <div class="container">
-      <h2 class="section-title fade-in">Featured Projects</h2>
-      <p class="section-subtitle">Real-world applications showcasing clean architecture and cross-platform expertise</p>
-      
-      <div class="projects-grid"></div>
-    </div>
-  </section>
-
-  <!-- Contact Section -->
-  <section id="contact" class="contact">
-    <div class="container">
-      <h2 class="section-title fade-in">Get In Touch</h2>
-      
-      <div class="contact-content">
-        <div class="contact-info slide-in-left">
-          <h3 class="contact-title"></h3>
-          <p class="contact-description"></p>
-          
-          <div class="contact-methods">
-            <div class="contact-method">
-              <span class="material-icons">email</span>
-              <div>
-                <h4>Email</h4>
-                <a href="#" class="contact-email"></a>
-              </div>
-            </div>
-            
-            <div class="contact-method">
-              <span class="material-icons">phone</span>
-              <div>
-                <h4>Phone</h4>
-                <a href="#" class="contact-phone"></a>
-              </div>
-            </div>
-            
-            <div class="contact-method">
-              <span class="material-icons">location_on</span>
-              <div>
-                <h4>Location</h4>
-                <p class="contact-location"></p>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <form class="contact-form slide-in-right" id="contact-form">
-          <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" id="name" name="name" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="message">Message</label>
-            <textarea id="message" name="message" rows="5" required></textarea>
-          </div>
-          
-          <button type="submit" class="cta-button primary">
-            <span class="button-text">Send Message</span>
-            <span class="material-icons button-icon">send</span>
-          </button>
-          
-          <div class="form-status"></div>
-        </form>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-content">
-        <p class="footer-copyright"></p>
-        <p class="footer-tagline"></p>
-      </div>
-      
-      <div class="footer-social">
-        <a href="#" data-social="linkedin" aria-label="LinkedIn" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" width="20" height="20">
-            <path fill="currentColor" d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
-          </svg>
-        </a>
-        <a href="#" data-social="github" aria-label="GitHub" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" width="20" height="20">
-            <path fill="currentColor" d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/>
-          </svg>
-        </a>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Scripts -->
-  <script src="script/script.js"></script>
+  <script src="script.js"></script>
 </body>
+
 </html>

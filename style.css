@@ -1,0 +1,250 @@
+:root {
+    /* Light Theme (Default) */
+    --bg-color: #ffffff;
+    --text-color: #1a1a1a;
+    --text-secondary: #666666;
+    --accent-color: #000000;
+    --btn-text: #ffffff;
+    --btn-secondary-bg: #f0f0f0;
+
+    /* Transition settings */
+    --transition-speed: 0.3s;
+}
+
+[data-theme="dark"] {
+    --bg-color: #111111;
+    --text-color: #ffffff;
+    --text-secondary: #aaaaaa;
+    --accent-color: #ffffff;
+    --btn-text: #000000;
+    --btn-secondary-bg: #222222;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    overflow: hidden;
+    /* For full screen app feel */
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+    /* Transition background color smoothly if no wave effect, but we will use wave */
+}
+
+/* Canvas Background */
+#particle-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    display: block;
+}
+
+/* UI Overlay */
+.navbar,
+.hero {
+    position: relative;
+    z-index: 10;
+    pointer-events: none;
+    /* Let clicks pass through where empty */
+}
+
+.navbar *,
+.hero * {
+    pointer-events: auto;
+    /* Re-enable pointer events for interactive elements */
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 3rem;
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+}
+
+/* Theme Toggle */
+.theme-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-color);
+    padding: 8px;
+    border-radius: 50%;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-btn:hover {
+    background-color: var(--btn-secondary-bg);
+}
+
+.theme-btn:active {
+    transform: scale(0.95);
+}
+
+.sun-icon,
+.moon-icon {
+    transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.5s ease;
+    position: absolute;
+}
+
+/* Logic to show/hide icons based on theme */
+/* Default (Light): Show Moon (to switch to dark), Hide Sun? Or Show Sun because it IS light? 
+   Usually: Show the icon of the mode you are IN or the mode you switch TO.
+   Let's show the mode we are currently IN. 
+   Light mode -> Show Sun. Dark mode -> Show Moon.
+*/
+
+[data-theme="light"] .moon-icon {
+    opacity: 0;
+    transform: rotate(90deg) scale(0.5);
+}
+
+[data-theme="light"] .sun-icon {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+}
+
+[data-theme="dark"] .sun-icon {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.5);
+}
+
+[data-theme="dark"] .moon-icon {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+}
+
+/* Hero Section */
+.hero {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 1rem;
+}
+
+.hero-content {
+    max-width: 800px;
+    animation: fadeIn 1s ease-out 0.2s backwards;
+}
+
+.hero-title {
+    font-size: 5rem;
+    font-weight: 300;
+    /* Minimal styling */
+    line-height: 1.1;
+    margin-bottom: 1rem;
+    letter-spacing: -0.04em;
+    background: linear-gradient(to right, var(--text-color), var(--text-secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    /* Gradient text */
+    transition: opacity 0.3s;
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    margin-bottom: 3rem;
+    font-weight: 400;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+}
+
+.btn {
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    font-size: 1rem;
+}
+
+.btn.primary {
+    background-color: var(--accent-color);
+    color: var(--btn-text);
+}
+
+.btn.secondary {
+    background-color: var(--btn-secondary-bg);
+    color: var(--text-color);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Theme Transition Ripple */
+.theme-transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    /* Behind particles if possible, but particles are z-1. Wait. */
+    /* If particles are z-1, body bg is behind them.
+       We want the ripple to be between body bg and particles? 
+       Or maybe just behind everything?
+       If this overlay is opacity 0 by default.
+       When animating:
+       1. Set color to NEW theme background.
+       2. Clip-path circle expands.
+       3. On end: Body bg becomes NEW theme. Overlay opacity 0.
+    */
+    display: none;
+    /* Hidden by default */
+}
+
+.theme-transition-overlay.animating {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 3rem;
+    }
+}
