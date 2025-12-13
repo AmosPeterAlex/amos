@@ -14,11 +14,15 @@
 
 <body>
   <canvas id="particle-canvas"></canvas>
-
   <div class="theme-transition-overlay"></div>
 
   <nav class="navbar">
     <div class="logo">Amos.</div>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
     <button id="theme-toggle" class="theme-btn" aria-label="Toggle Theme">
       <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -39,16 +43,65 @@
     </button>
   </nav>
 
-  <main class="hero">
-    <div class="hero-content">
-      <h1 class="hero-title">Amos P Alex</h1>
-      <p class="hero-subtitle">Frontend &amp; Flutter Developer</p>
-      <div class="hero-actions">
-        <a href="#work" class="btn primary">View Work</a>
-        <a href="#contact" class="btn secondary">Contact</a>
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <h1 class="hero-title">Amos P Alex</h1>
+        <p class="hero-subtitle">Frontend &amp; Flutter Developer</p>
+        <div class="hero-actions">
+          <a href="#projects" class="btn primary">View Work</a>
+          <a href="#contact" class="btn secondary">Contact</a>
+        </div>
       </div>
-    </div>
+    </section>
+
+    <section id="about" class="content-section">
+      <div class="container">
+        <h2>About Me</h2>
+        <div class="text-grid">
+          <p>I build intuitive, performant, and beautiful applications. With a focus on Flutter and modern web
+            technologies, I aim to bridge the gap between complex logic and seamless user interaction.</p>
+          <p>My approach combines clean architecture with a keen eye for design, ensuring that every pixel serves a
+            purpose.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects" class="content-section">
+      <div class="container">
+        <h2>Selected Projects</h2>
+        <div class="project-grid">
+          <div class="project-card">
+            <h3>E-Commerce App</h3>
+            <p>A full-featured mobile shopping application built with Flutter and Firebase.</p>
+            <a href="#" class="arrow-link">View Project &rarr;</a>
+          </div>
+          <div class="project-card">
+            <h3>Task Master</h3>
+            <p>Productivity tool focusing on minimalist design and gesture-based interaction.</p>
+            <a href="#" class="arrow-link">View Project &rarr;</a>
+          </div>
+          <div class="project-card">
+            <h3>Portfolio V1</h3>
+            <p>Previous iteration of my personal site exploring 3D web technologies.</p>
+            <a href="#" class="arrow-link">View Project &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="content-section">
+      <div class="container">
+        <h2>Get In Touch</h2>
+        <p>Open for opportunities and collaborations.</p>
+        <a href="mailto:hello@example.com" class="btn primary">Send Email</a>
+      </div>
+    </section>
   </main>
+
+  <footer>
+    <p>&copy; 2025 Amos P Alex. Crafted with code.</p>
+  </footer>
 
   <script src="script.js"></script>
 </body>

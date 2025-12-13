@@ -3,21 +3,24 @@
     --bg-color: #ffffff;
     --text-color: #1a1a1a;
     --text-secondary: #666666;
+    --card-bg: #f5f5f5;
     --accent-color: #000000;
     --btn-text: #ffffff;
-    --btn-secondary-bg: #f0f0f0;
+    --btn-secondary-bg: #ececec;
 
-    /* Transition settings */
-    --transition-speed: 0.3s;
+    /* Layout */
+    --container-width: 1100px;
+    --nav-height: 80px;
 }
 
 [data-theme="dark"] {
     --bg-color: #111111;
-    --text-color: #ffffff;
-    --text-secondary: #aaaaaa;
+    --text-color: #f0f0f0;
+    --text-secondary: #a0a0a0;
+    --card-bg: #1e1e1e;
     --accent-color: #ffffff;
     --btn-text: #000000;
-    --btn-secondary-bg: #222222;
+    --btn-secondary-bg: #333333;
 }
 
 * {
@@ -26,59 +29,89 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     font-family: 'Outfit', sans-serif;
     background-color: var(--bg-color);
     color: var(--text-color);
-    overflow: hidden;
-    /* For full screen app feel */
-    height: 100vh;
-    width: 100vw;
-    position: relative;
-    /* Transition background color smoothly if no wave effect, but we will use wave */
+    overflow-x: hidden;
+    /* Prevent horizontal scroll only */
+    min-height: 100vh;
+    transition: color 0.3s ease;
+    /* Smooth text transition only, bg handled by wave/canvas */
 }
 
-/* Canvas Background */
+/* Fixed Background Canvas */
 #particle-canvas {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 1;
-    display: block;
-}
-
-/* UI Overlay */
-.navbar,
-.hero {
-    position: relative;
-    z-index: 10;
+    z-index: -1;
     pointer-events: none;
-    /* Let clicks pass through where empty */
+    /* Allows clicks to pass through */
 }
 
-.navbar *,
-.hero * {
-    pointer-events: auto;
-    /* Re-enable pointer events for interactive elements */
+/* Layout Containers */
+.container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 2rem;
 }
 
-/* Navbar */
+/* Navigation */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 2rem 3rem;
+    padding: 0 2rem;
+    height: var(--nav-height);
     position: fixed;
     top: 0;
     width: 100%;
+    z-index: 100;
+    background-color: rgba(255, 255, 255, 0.0);
+    /* Transparent initially */
+    backdrop-filter: blur(10px);
+    transition: background-color 0.3s ease;
+}
+
+[data-theme="dark"] .navbar {
+    background-color: rgba(17, 17, 17, 0.0);
+}
+
+/* Scrolled visual aid (optional JS could toggle this class) */
+.navbar.scrolled {
+    background-color: var(--bg-color);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
 }
 
 .logo {
     font-size: 1.5rem;
     font-weight: 600;
-    letter-spacing: -0.02em;
+    color: var(--text-color);
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 400;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+
+.nav-links a:hover {
+    color: var(--text-secondary);
 }
 
 /* Theme Toggle */
@@ -89,32 +122,24 @@ body {
     color: var(--text-color);
     padding: 8px;
     border-radius: 50%;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: background-color 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    width: 40px;
+    height: 40px;
 }
 
 .theme-btn:hover {
     background-color: var(--btn-secondary-bg);
 }
 
-.theme-btn:active {
-    transform: scale(0.95);
-}
-
 .sun-icon,
 .moon-icon {
-    transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.5s ease;
     position: absolute;
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease;
 }
-
-/* Logic to show/hide icons based on theme */
-/* Default (Light): Show Moon (to switch to dark), Hide Sun? Or Show Sun because it IS light? 
-   Usually: Show the icon of the mode you are IN or the mode you switch TO.
-   Let's show the mode we are currently IN. 
-   Light mode -> Show Sun. Dark mode -> Show Moon.
-*/
 
 [data-theme="light"] .moon-icon {
     opacity: 0;
@@ -136,7 +161,7 @@ body {
     transform: rotate(0deg) scale(1);
 }
 
-/* Hero Section */
+/* Sections */
 .hero {
     height: 100vh;
     display: flex;
@@ -147,46 +172,33 @@ body {
     padding: 0 1rem;
 }
 
-.hero-content {
-    max-width: 800px;
-    animation: fadeIn 1s ease-out 0.2s backwards;
-}
-
 .hero-title {
-    font-size: 5rem;
+    font-size: 4.5rem;
     font-weight: 300;
-    /* Minimal styling */
     line-height: 1.1;
     margin-bottom: 1rem;
-    letter-spacing: -0.04em;
-    background: linear-gradient(to right, var(--text-color), var(--text-secondary));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    /* Gradient text */
-    transition: opacity 0.3s;
+    letter-spacing: -0.03em;
 }
 
 .hero-subtitle {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     color: var(--text-secondary);
-    margin-bottom: 3rem;
+    margin-bottom: 2.5rem;
     font-weight: 400;
 }
 
 .hero-actions {
     display: flex;
-    gap: 1.5rem;
-    justify-content: center;
+    gap: 1rem;
 }
 
 .btn {
-    padding: 1rem 2rem;
+    padding: 0.9rem 2rem;
     border-radius: 50px;
     text-decoration: none;
     font-weight: 500;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
     font-size: 1rem;
+    transition: all 0.2s ease;
 }
 
 .btn.primary {
@@ -201,50 +213,105 @@ body {
 
 .btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Theme Transition Ripple */
+.content-section {
+    padding: 6rem 0;
+}
+
+.content-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+}
+
+.text-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    max-width: 800px;
+}
+
+.text-grid p {
+    line-height: 1.6;
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+/* Projects Grid */
+.project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.project-card {
+    background-color: var(--card-bg);
+    padding: 2.5rem;
+    border-radius: 12px;
+    transition: transform 0.3s ease;
+}
+
+.project-card:hover {
+    transform: translateY(-5px);
+}
+
+.project-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.project-card p {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+.arrow-link {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+footer {
+    text-align: center;
+    padding: 4rem 0;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* Transition Overlay */
 .theme-transition-overlay {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    /* Very high to cover everything during transition */
     pointer-events: none;
-    z-index: 0;
-    /* Behind particles if possible, but particles are z-1. Wait. */
-    /* If particles are z-1, body bg is behind them.
-       We want the ripple to be between body bg and particles? 
-       Or maybe just behind everything?
-       If this overlay is opacity 0 by default.
-       When animating:
-       1. Set color to NEW theme background.
-       2. Clip-path circle expands.
-       3. On end: Body bg becomes NEW theme. Overlay opacity 0.
-    */
+    /* Default state */
     display: none;
-    /* Hidden by default */
 }
 
 .theme-transition-overlay.animating {
     display: block;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
 @media (max-width: 768px) {
     .hero-title {
         font-size: 3rem;
+    }
+
+    .nav-links {
+        display: none;
+    }
+
+    /* Simplified mobile handling */
+    .text-grid {
+        grid-template-columns: 1fr;
     }
 }
