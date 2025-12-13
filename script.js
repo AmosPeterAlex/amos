@@ -10,6 +10,7 @@ class ThemeManager {
         this.themeToggleBtn = document.getElementById('theme-toggle');
         this.body = document.body;
         this.overlay = document.querySelector('.theme-transition-overlay');
+        this.logoBtn = document.getElementById('brand-logo');
         this.isAnimating = false;
 
         this.themes = {
@@ -28,13 +29,34 @@ class ThemeManager {
         this.currentTheme = localStorage.getItem('theme') ||
             (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 
+        this.currentColorTheme = localStorage.getItem('color-theme') || 'default';
+
         this.init();
     }
 
     init() {
         // Set initial state without animation
         this.applyTheme(this.currentTheme);
+        this.applyColorTheme(this.currentColorTheme);
+
         this.themeToggleBtn.addEventListener('click', (e) => this.toggleTheme(e));
+        if (this.logoBtn) {
+            this.logoBtn.addEventListener('click', () => this.toggleColorTheme());
+        }
+    }
+
+    applyColorTheme(colorTheme) {
+        if (colorTheme === 'default') {
+            this.body.removeAttribute('data-color-theme');
+        } else {
+            this.body.setAttribute('data-color-theme', colorTheme);
+        }
+        localStorage.setItem('color-theme', colorTheme);
+    }
+
+    toggleColorTheme() {
+        this.currentColorTheme = this.currentColorTheme === 'default' ? 'alt' : 'default';
+        this.applyColorTheme(this.currentColorTheme);
     }
 
     applyTheme(themeName) {
