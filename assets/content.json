@@ -1,0 +1,218 @@
+{
+  "hero": {
+    "greeting": "Hello, I'm",
+    "name": "Amos P Alex",
+    "typingText": [
+      "Flutter Developer",
+      "Mobile App Specialist",
+      "Cross-Platform Expert"
+    ],
+    "description": "Flutter Developer with 2 years of experience building responsive and scalable cross-platform applications for mobile, web, and desktop. Passionate about clean architecture, performance optimization, and delivering exceptional user experiences.",
+    "social": {
+      "linkedin": "https://www.linkedin.com/in/amos-p-alex",
+      "github": "https://github.com/AmosPeterAlex",
+      "email": "mailto:amospalex@gmail.com",
+      "phone": "tel:+919633780485"
+    },
+    "cta": {
+      "label": "View My Work",
+      "targetId": "projects"
+    }
+  },
+
+  "about": {
+    "paragraphsHtml": [
+      "<p>I'm a Flutter Developer based in Kollam, Kerala, with a strong foundation in building enterprise-grade applications across multiple platforms. My journey began with a B.Tech in Electronics & Communication Engineering from A.P.J Abdul Kalam Technological University, and I've since dedicated myself to mastering cross-platform development.</p>",
+      "<p>Currently working at <strong>Nexteons LLP</strong>, I specialize in developing scalable ERP systems using Flutter, Dart, and GraphQL. I've optimized API performance from 3 seconds to under 500ms, implemented CI/CD pipelines, and built interactive dashboards that serve real business needs.</p>",
+      "<p>My approach centers on <strong>clean architecture</strong>, maintainable code, and user-centric design. Whether it's mobile, web, or desktop, I focus on creating seamless experiences that solve real problems. I'm particularly skilled in state management patterns (GetX, Provider, BLoC), backend integration (GraphQL, REST), and performance optimization.</p>",
+      "<p>Beyond coding, I value continuous learning, effective communication, and collaborative problem-solving. I'm always exploring new Flutter capabilities and best practices to deliver better solutions.</p>"
+    ]
+  },
+
+  "valuesGoals": {
+    "valuesHtml": "<p>I believe in writing code that's not just functional, but <strong>maintainable, testable, and scalable</strong>. Clean architecture isn't just a pattern—it's a mindset. I value collaboration, clear communication, and the discipline to do things right even when deadlines are tight.</p>",
+    "goalsHtml": "<p>My goal is to become a <strong>senior Flutter architect</strong> who shapes technical decisions and mentors teams. I'm focused on deepening my expertise in advanced Flutter patterns, contributing to open-source projects, and building applications that make a meaningful impact at scale.</p>"
+  },
+
+  "experience": [
+    {
+      "tabId": "nexteons",
+      "companyShort": "Nexteons",
+      "title": "Flutter Developer",
+      "company": "Nexteons LLP",
+      "location": "Remote",
+      "duration": "May 2024 – Present",
+      "highlights": [
+        "<li>Developed and maintained a cross-platform <strong>ERP system</strong> for Web, Windows, and Mobile using Flutter and Dart, ensuring high performance and scalability across all platforms</li>",
+        "<li>Integrated frontend with <strong>GraphQL APIs</strong> (NestJS backend) and MongoDB; leveraged Apollo Server for testing and query optimization</li>",
+        "<li>Implemented structured navigation with <strong>GoRouter</strong>, improving UX consistency across app modules and reducing navigation-related bugs by 40%</li>",
+        "<li>Used <strong>Hive</strong> for local storage and offline support, enhancing app reliability and startup speed by 60%</li>",
+        "<li>Optimized GraphQL API calls by aggregating multiple queries and decoupling pagination, <strong>reducing API latency from 3s to under 500ms</strong></li>",
+        "<li>Built interactive dashboards supporting reports, printing, and export to <strong>Excel/PDF</strong> for internal stakeholders</li>",
+        "<li>Established <strong>CI/CD pipelines</strong> for automatic web rebuilds and production deployments, streamlining release cycles and reducing deployment time by 70%</li>",
+        "<li>Applied keyboard shortcuts and workflow automation in Flutter web projects to accelerate development and enterprise demos</li>",
+        "<li>Collaborated with backend, QA, and design teams through code reviews, bug triage, and performance tuning</li>"
+      ]
+    },
+    {
+      "tabId": "luminar",
+      "companyShort": "Luminar",
+      "title": "Flutter Intern",
+      "company": "Luminar Technolab",
+      "location": "Kerala, India",
+      "duration": "Sept 2023 – May 2024",
+      "highlights": [
+        "<li>Completed intensive Flutter training covering mobile fundamentals, <strong>clean architecture</strong>, and cross-platform best practices</li>",
+        "<li>Built <strong>reusable UI components</strong> and implemented Git-based workflows for version control and team collaboration</li>",
+        "<li>Contributed to code quality improvements through peer reviews, testing, and adherence to coding standards</li>",
+        "<li>Delivered small features and bug fixes while gaining hands-on experience in state management (Provider, GetX) and production-ready project structure</li>",
+        "<li>Collaborated with senior developers on real-world client projects, learning industry best practices and agile methodologies</li>"
+      ]
+    }
+  ],
+
+  "skills": [
+    {"icon": "code", "label": "Dart"},
+    {"icon": "smartphone", "label": "Flutter"},
+    {"icon": "architecture", "label": "Clean Architecture"},
+    {"icon": "storage", "label": "State Management"},
+    {"icon": "api", "label": "GraphQL"},
+    {"icon": "cloud", "label": "REST API"},
+    {"icon": "settings", "label": "Firebase"},
+    {"icon": "speed", "label": "Performance Optimization"},
+    {"icon": "integration_instructions", "label": "CI/CD"},
+    {"icon": "devices", "label": "Cross-Platform"},
+    {"icon": "bug_report", "label": "Testing"},
+    {"icon": "account_tree", "label": "GetX"},
+    {"icon": "account_tree", "label": "Provider"},
+    {"icon": "account_tree", "label": "BLoC (concepts)"},
+    {"icon": "account_tree", "label": "MVVM/MVC patterns"},
+    {"icon": "api", "label": "Apollo Server"},
+    {"icon": "api", "label": "JSON"},
+    {"icon": "storage", "label": "Hive"},
+    {"icon": "storage", "label": "SQLite"},
+    {"icon": "storage", "label": "SharedPreferences"},
+    {"icon": "storage", "label": "Firebase"},
+    {"icon": "build", "label": "Git & GitHub"},
+    {"icon": "build", "label": "Postman"},
+    {"icon": "build", "label": "VS Code"},
+    {"icon": "build", "label": "Android Studio"},
+    {"icon": "build", "label": "CI/CD pipelines"},
+
+    {"icon": "verified", "label": "Unit Testing"},
+    {"icon": "verified", "label": "Widget Testing"},
+    {"icon": "verified", "label": "Code Reviews"},
+    {"icon": "verified", "label": "Performance Profiling"},
+
+    {"icon": "devices", "label": "Android"},
+    {"icon": "devices", "label": "iOS"}
+  ],
+
+  "skillCategories": [
+    {
+      "title": "Languages & Frameworks",
+      "icon": "code",
+      "items": ["Dart", "Flutter", "Python (Django basics)"]
+    },
+    {
+      "title": "State Management & Architecture",
+      "icon": "account_tree",
+      "items": ["GetX", "Provider", "BLoC (concepts)", "Clean Architecture", "MVVM/MVC patterns"]
+    },
+    {
+      "title": "APIs & Backend Integration",
+      "icon": "api",
+      "items": ["GraphQL", "REST API", "NestJS integration", "Apollo Server", "JSON", "JWT authentication"]
+    },
+    {
+      "title": "Databases & Storage",
+      "icon": "storage",
+      "items": ["MongoDB", "Hive", "SQLite", "SharedPreferences", "Firebase (Auth/Firestore/Storage)"]
+    },
+    {
+      "title": "Development Tools",
+      "icon": "build",
+      "items": ["Git & GitHub", "Postman", "VS Code", "Android Studio", "CI/CD pipelines"]
+    },
+    {
+      "title": "Testing & Quality",
+      "icon": "verified",
+      "items": ["Unit Testing", "Widget Testing", "Code Reviews", "Performance Profiling"]
+    },
+    {
+      "title": "Platforms",
+      "icon": "devices",
+      "items": ["Android", "iOS", "Web (Flutter Web)", "Windows Desktop"]
+    }
+  ],
+
+  "projects": [
+    {
+      "title": "CropMate - Farmers Marketplace",
+      "description": "A mobile application connecting farmers directly with consumers, eliminating middlemen and enabling fair pricing for agricultural products. Built as a team project with clean architecture and scalable backend integration.",
+      "features": [
+        "Direct farmer-to-consumer marketplace with product listings",
+        "Admin module for managing farmers, users, and government schemes",
+        "Real-time inventory management and order tracking",
+        "Government schemes integration for farmer benefits",
+        "User authentication and profile management"
+      ],
+      "tech": ["Flutter", "Dart", "Provider", "REST API", "Python Django", "Clean Architecture"],
+      "links": {
+        "github": "https://github.com/AmosPeterAlex"
+      }
+    },
+    {
+      "title": "NEWS TODAY - News Aggregator",
+      "description": "A modern news application delivering the latest headlines across multiple categories with an intuitive and responsive interface. Integrated with newsapi.org for real-time news updates.",
+      "features": [
+        "Category-based news browsing (Tech, Sports, Business, etc.)",
+        "Real-time news updates from newsapi.org",
+        "Article sharing and URL launching functionality",
+        "Responsive UI with smooth navigation",
+        "Optimized loading and caching for better performance"
+      ],
+      "tech": ["Flutter", "Dart", "Provider", "REST API", "newsapi.org", "URL Launcher", "Share Plus"],
+      "links": {
+        "github": "https://github.com/AmosPeterAlex"
+      }
+    },
+    {
+      "title": "Cook-Share - Recipe Social Platform",
+      "description": "A social media platform for food enthusiasts to share recipes, follow chefs, and engage with a community of cooking lovers. Features real-time interactions and content moderation.",
+      "features": [
+        "Recipe posting with image uploads and ingredient lists",
+        "Social features: likes, comments, follow/unfollow",
+        "Chef/influencer profiles with follower analytics",
+        "Real-time feed updates with infinite scroll pagination",
+        "Image caching and optimization for fast loading"
+      ],
+      "tech": ["Flutter", "Dart", "Django REST Framework", "Provider", "Image Upload", "Authentication", "Caching"],
+      "links": {
+        "github": "https://github.com/AmosPeterAlex"
+      }
+    }
+  ],
+
+  "contact": {
+    "title": "Let's Build Something Together",
+    "description": "I'm currently open to new opportunities, freelance projects, and collaborations. Whether you have a project in mind or just want to connect, feel free to reach out!",
+    "formspreeEndpoint": "YOUR_FORMSPREE_ENDPOINT_HERE",
+    "formFields": {
+      "namePlaceholder": "Your Name",
+      "emailPlaceholder": "Your Email",
+      "messagePlaceholder": "Tell me about your project or idea...",
+      "submitText": "Send Message"
+    },
+    "directContact": {
+      "email": "amospalex@gmail.com",
+      "phone": "+91 9633780485",
+      "location": "Kollam, Kerala, India"
+    }
+  },
+
+  "footer": {
+    "copyright": "© 2024 Amos P Alex. All rights reserved.",
+    "tagline": "Built with Flutter-inspired precision"
+  }
+}
