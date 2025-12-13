@@ -34,7 +34,7 @@ html {
 }
 
 body {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Inter', sans-serif;
     background-color: var(--bg-color);
     color: var(--text-color);
     overflow-x: hidden;
@@ -163,33 +163,40 @@ body {
 
 /* Sections */
 .hero {
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
     padding: 0 1rem;
+    padding-top: var(--nav-height);
+    /* Account for fixed nav */
 }
 
 .hero-title {
+    font-family: 'Poppins', sans-serif;
     font-size: 4.5rem;
-    font-weight: 300;
+    font-weight: 600;
     line-height: 1.1;
-    margin-bottom: 1rem;
-    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
 }
 
 .hero-subtitle {
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     color: var(--text-secondary);
     margin-bottom: 2.5rem;
     font-weight: 400;
+    line-height: 1.6;
+    max-width: 600px;
 }
 
 .hero-actions {
     display: flex;
-    gap: 1rem;
+    justify-content: center;
+    gap: 1.5rem;
+    width: 100%;
 }
 
 .btn {
@@ -276,11 +283,65 @@ body {
     font-size: 0.9rem;
 }
 
-footer {
-    text-align: center;
-    padding: 4rem 0;
+/* Contact Section */
+.contact-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+}
+
+.contact-info p {
+    font-size: 1.1rem;
     color: var(--text-secondary);
+    line-height: 1.6;
+    max-width: 400px;
+}
+
+.contact-form-container {
+    background-color: var(--card-bg);
+    padding: 2rem;
+    border-radius: 12px;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-weight: 500;
     font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group textarea {
+    padding: 0.8rem;
+    border-radius: 6px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: inherit;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+[data-theme="dark"] .form-group input,
+[data-theme="dark"] .form-group textarea {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent-color);
 }
 
 /* Transition Overlay */
@@ -301,17 +362,102 @@ footer {
     display: block;
 }
 
+footer {
+    text-align: center;
+    padding: 4rem 0;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-top: 2rem;
+}
+
 @media (max-width: 768px) {
     .hero-title {
         font-size: 3rem;
     }
 
+    .hamburger {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        cursor: pointer;
+        z-index: 101;
+    }
+
+    .hamburger span {
+        width: 25px;
+        height: 2px;
+        background-color: var(--text-color);
+        transition: all 0.3s ease;
+    }
+
+    /* Hamburger Animation when Active */
+    .nav-active .hamburger span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 6px);
+    }
+
+    .nav-active .hamburger span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .nav-active .hamburger span:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -6px);
+    }
+
     .nav-links {
-        display: none;
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 70%;
+        height: 100vh;
+        background-color: var(--bg-color);
+        padding-top: var(--nav-height);
+        align-items: center;
+        transition: right 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+        z-index: 100;
+    }
+
+    .nav-active .nav-links {
+        right: 0;
+    }
+
+    .nav-links li {
+        opacity: 0;
+        transform: translateX(20px);
+        transition: all 0.4s ease;
+    }
+
+    .nav-active .nav-links li {
+        opacity: 1;
+        transform: translateX(0);
+        margin-bottom: 2rem;
+    }
+
+    .contact-wrapper {
+        grid-template-columns: 1fr;
+        gap: 2rem;
     }
 
     /* Simplified mobile handling */
     .text-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+.hamburger {
+    display: none;
+}
+
+@keyframes navLinkFade {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
     }
 }
