@@ -2,6 +2,7 @@
  * Interactive Particle Portfolio - Iteration 2
  * - Fixed: Full page scrolling support
  * - Fixed: Mouse interaction works through layers
+ * - Fixed: Theme animation sequencing (Wave Effect)
  */
 
 class ThemeManager {
@@ -9,8 +10,8 @@ class ThemeManager {
         this.themeToggleBtn = document.getElementById('theme-toggle');
         this.body = document.body;
         this.overlay = document.querySelector('.theme-transition-overlay');
+        this.isAnimating = false;
 
-        // Colors for particles need to track themes
         this.themes = {
             light: {
                 bg: '#ffffff',
@@ -31,37 +32,52 @@ class ThemeManager {
     }
 
     init() {
-        this.applyTheme(this.currentTheme, false);
+        // Set initial state without animation
+        this.applyTheme(this.currentTheme);
         this.themeToggleBtn.addEventListener('click', (e) => this.toggleTheme(e));
     }
 
-    applyTheme(themeName, animate = true) {
+    applyTheme(themeName) {
+        // This actually switches the CSS variables and sets state
         this.body.setAttribute('data-theme', themeName);
         localStorage.setItem('theme', themeName);
-
-        if (window.particleSystem) {
-            window.particleSystem.updateTheme(this.themes[themeName].particle);
-        }
     }
 
     toggleTheme(e) {
+        if (this.isAnimating) return;
+        this.isAnimating = true;
+
+        const oldTheme = this.currentTheme;
         const newTheme = this.currentTheme === 'light' ? 'dark' : 'light';
         this.currentTheme = newTheme;
-        this.animateTransition(e, newTheme);
-        this.applyTheme(newTheme); // Apply logical theme immediately for text
+
+        // 1. Start Particle Transition Immediately (Visual "Mix")
+        if (window.particleSystem) {
+            window.particleSystem.updateTheme(this.themes[newTheme].particle);
+        }
+
+        // 2. Start Wave Animation
+        this.animateTransition(e, newTheme, () => {
+            // 3. On Finish: detailed switch
+            this.applyTheme(newTheme);
+            this.isAnimating = false;
+        });
     }
 
-    animateTransition(e, newTheme) {
+    animateTransition(e, newTheme, onComplete) {
         const rect = e.currentTarget.getBoundingClientRect();
-        // Calculate center of button
         const x = rect.left + rect.width / 2;
-        const y = rect.top + rect.height / 2; // y is relative to viewport, which is what fixed overlay needs
+        const y = rect.top + rect.height / 2;
 
-        // Set overlay properties
+        // Prepare overlay
         this.overlay.style.backgroundColor = this.themes[newTheme].bg;
         this.overlay.classList.add('animating');
 
-        const maxRadius = Math.hypot(window.innerWidth, window.innerHeight);
+        // Calculate radius to cover the furthest corner
+        const maxRadius = Math.hypot(
+            Math.max(x, window.innerWidth - x),
+            Math.max(y, window.innerHeight - y)
+        );
 
         const animation = this.overlay.animate([
             { clipPath: `circle(0px at ${x}px ${y}px)` },
@@ -73,8 +89,10 @@ class ThemeManager {
         });
 
         animation.onfinish = () => {
+            onComplete();
             this.overlay.classList.remove('animating');
             this.overlay.style.clipPath = 'none';
+            animation.cancel();
         };
     }
 }
@@ -111,12 +129,6 @@ class Particle {
     }
 
     update(width, height, mouse) {
-        // Interaction Logic
-        // Mouse coordinates are clientX/Y (viewport relative)
-        // Particle coordinates are canvas relative (which is fixed to viewport)
-        // So simple distance check works.
-
-        // However, if mouse is not on screen (initial state), don't interact
         if (mouse.x != null) {
             let dx = mouse.x - this.x;
             let dy = mouse.y - this.y;
@@ -173,7 +185,6 @@ class Particle {
     }
 
     setTargetColor(hex) {
-        // Freeze current color as start point
         this.currentColorRGB = {
             r: Math.round(this.currentColorRGB.r + (this.targetColorRGB.r - this.currentColorRGB.r) * this.colorMix),
             g: Math.round(this.currentColorRGB.g + (this.targetColorRGB.g - this.currentColorRGB.g) * this.colorMix),
@@ -192,14 +203,10 @@ class ParticleSystem {
         this.mouse = { x: null, y: null };
 
         window.addEventListener('resize', () => this.resize());
-
-        // Track mouse relative to VIEWPORT (clientX/Y)
         window.addEventListener('mousemove', (e) => {
             this.mouse.x = e.clientX;
             this.mouse.y = e.clientY;
         });
-
-        // Also track scroll if we wanted parallax, but for now fixed bg is fine.
 
         this.resize();
         this.initParticles();
