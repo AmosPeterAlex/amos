@@ -7,9 +7,9 @@
     --accent-color: #000000;
     --btn-text: #ffffff;
     --btn-secondary-bg: #ececec;
-    
+
     /* Magnification Defaults */
-    --mag-target-color: #000000; /* Dark text on light bg */
+    /* Color removed */
 
     /* Layout */
     --container-width: 1100px;
@@ -24,7 +24,7 @@
     --accent-color: #ffffff;
     --btn-text: #000000;
     --btn-secondary-bg: #333333;
-    --mag-target-color: #ffffff; /* Light text on dark bg */
+    /* Color removed */
 }
 
 /* Alternate Color Theme */
@@ -65,10 +65,10 @@ body {
 .magnify-char {
     display: inline-block;
     vertical-align: top;
-    will-change: transform, color;
+    will-change: transform;
     transform-origin: center bottom;
     /* Optional: subtle transition for color, but transform is managed by JS/RAF for partial frames */
-    transition: color 0.1s ease-out; 
+    /* transition: color 0.1s ease-out; removed */
     /* Prevent blurry text scaling in some browsers */
     -webkit-font-smoothing: antialiased;
     backface-visibility: hidden;

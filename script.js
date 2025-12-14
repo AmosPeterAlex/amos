@@ -357,18 +357,10 @@ class TextMagnifier {
                         // We'll use the CSS var approach.
 
                         char.style.transform = `scale(${scale})`;
-
-                        // Apply color change if close enough (stronger effect)
-                        if (intensity > 0.3) {
-                            char.style.color = 'var(--mag-target-color)';
-                        } else {
-                            char.style.color = '';
-                        }
                     } else {
                         // Reset if needed
                         if (char.style.transform) {
                             char.style.transform = '';
-                            char.style.color = '';
                         }
                     }
                 });
