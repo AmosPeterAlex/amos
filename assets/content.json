@@ -19,7 +19,6 @@
       "targetId": "projects"
     }
   },
-
   "about": {
     "paragraphsHtml": [
       "<p>I'm a Flutter Developer based in Kollam, Kerala, with a strong foundation in building enterprise-grade applications across multiple platforms. My journey began with a B.Tech in Electronics & Communication Engineering from A.P.J Abdul Kalam Technological University, and I've since dedicated myself to mastering cross-platform development.</p>",
@@ -28,12 +27,10 @@
       "<p>Beyond coding, I value continuous learning, effective communication, and collaborative problem-solving. I'm always exploring new Flutter capabilities and best practices to deliver better solutions.</p>"
     ]
   },
-
   "valuesGoals": {
     "valuesHtml": "<p>I believe in writing code that's not just functional, but <strong>maintainable, testable, and scalable</strong>. Clean architecture isn't just a pattern—it's a mindset. I value collaboration, clear communication, and the discipline to do things right even when deadlines are tight.</p>",
     "goalsHtml": "<p>My goal is to become a <strong>senior Flutter architect</strong> who shapes technical decisions and mentors teams. I'm focused on deepening my expertise in advanced Flutter patterns, contributing to open-source projects, and building applications that make a meaningful impact at scale.</p>"
   },
-
   "experience": [
     {
       "tabId": "nexteons",
@@ -70,82 +67,212 @@
       ]
     }
   ],
-
   "skills": [
-    {"icon": "code", "label": "Dart"},
-    {"icon": "smartphone", "label": "Flutter"},
-    {"icon": "architecture", "label": "Clean Architecture"},
-    {"icon": "storage", "label": "State Management"},
-    {"icon": "api", "label": "GraphQL"},
-    {"icon": "cloud", "label": "REST API"},
-    {"icon": "settings", "label": "Firebase"},
-    {"icon": "speed", "label": "Performance Optimization"},
-    {"icon": "integration_instructions", "label": "CI/CD"},
-    {"icon": "devices", "label": "Cross-Platform"},
-    {"icon": "bug_report", "label": "Testing"},
-    {"icon": "account_tree", "label": "GetX"},
-    {"icon": "account_tree", "label": "Provider"},
-    {"icon": "account_tree", "label": "BLoC (concepts)"},
-    {"icon": "account_tree", "label": "MVVM/MVC patterns"},
-    {"icon": "api", "label": "Apollo Server"},
-    {"icon": "api", "label": "JSON"},
-    {"icon": "storage", "label": "Hive"},
-    {"icon": "storage", "label": "SQLite"},
-    {"icon": "storage", "label": "SharedPreferences"},
-    {"icon": "storage", "label": "Firebase"},
-    {"icon": "build", "label": "Git & GitHub"},
-    {"icon": "build", "label": "Postman"},
-    {"icon": "build", "label": "VS Code"},
-    {"icon": "build", "label": "Android Studio"},
-    {"icon": "build", "label": "CI/CD pipelines"},
-
-    {"icon": "verified", "label": "Unit Testing"},
-    {"icon": "verified", "label": "Widget Testing"},
-    {"icon": "verified", "label": "Code Reviews"},
-    {"icon": "verified", "label": "Performance Profiling"},
-
-    {"icon": "devices", "label": "Android"},
-    {"icon": "devices", "label": "iOS"}
+    {
+      "icon": "code",
+      "label": "Dart"
+    },
+    {
+      "icon": "smartphone",
+      "label": "Flutter"
+    },
+    {
+      "icon": "architecture",
+      "label": "Clean Architecture"
+    },
+    {
+      "icon": "storage",
+      "label": "State Management"
+    },
+    {
+      "icon": "api",
+      "label": "GraphQL"
+    },
+    {
+      "icon": "cloud",
+      "label": "REST API"
+    },
+    {
+      "icon": "settings",
+      "label": "Firebase"
+    },
+    {
+      "icon": "speed",
+      "label": "Performance Optimization"
+    },
+    {
+      "icon": "integration_instructions",
+      "label": "CI/CD"
+    },
+    {
+      "icon": "devices",
+      "label": "Cross-Platform"
+    },
+    {
+      "icon": "bug_report",
+      "label": "Testing"
+    },
+    {
+      "icon": "account_tree",
+      "label": "GetX"
+    },
+    {
+      "icon": "account_tree",
+      "label": "Provider"
+    },
+    {
+      "icon": "account_tree",
+      "label": "BLoC (concepts)"
+    },
+    {
+      "icon": "account_tree",
+      "label": "MVVM/MVC patterns"
+    },
+    {
+      "icon": "api",
+      "label": "Apollo Server"
+    },
+    {
+      "icon": "api",
+      "label": "JSON"
+    },
+    {
+      "icon": "storage",
+      "label": "Hive"
+    },
+    {
+      "icon": "storage",
+      "label": "SQLite"
+    },
+    {
+      "icon": "storage",
+      "label": "SharedPreferences"
+    },
+    {
+      "icon": "storage",
+      "label": "Firebase"
+    },
+    {
+      "icon": "build",
+      "label": "Git & GitHub"
+    },
+    {
+      "icon": "build",
+      "label": "Postman"
+    },
+    {
+      "icon": "build",
+      "label": "VS Code"
+    },
+    {
+      "icon": "build",
+      "label": "Android Studio"
+    },
+    {
+      "icon": "build",
+      "label": "CI/CD pipelines"
+    },
+    {
+      "icon": "verified",
+      "label": "Unit Testing"
+    },
+    {
+      "icon": "verified",
+      "label": "Widget Testing"
+    },
+    {
+      "icon": "verified",
+      "label": "Code Reviews"
+    },
+    {
+      "icon": "verified",
+      "label": "Performance Profiling"
+    },
+    {
+      "icon": "devices",
+      "label": "Android"
+    },
+    {
+      "icon": "devices",
+      "label": "iOS"
+    }
   ],
-
   "skillCategories": [
     {
       "title": "Languages & Frameworks",
       "icon": "code",
-      "items": ["Dart", "Flutter", "Python (Django basics)"]
+      "items": [
+        "Dart",
+        "Flutter",
+        "Python (Django basics)"
+      ]
     },
     {
       "title": "State Management & Architecture",
       "icon": "account_tree",
-      "items": ["GetX", "Provider", "BLoC (concepts)", "Clean Architecture", "MVVM/MVC patterns"]
+      "items": [
+        "GetX",
+        "Provider",
+        "BLoC (concepts)",
+        "Clean Architecture",
+        "MVVM/MVC patterns"
+      ]
     },
     {
       "title": "APIs & Backend Integration",
       "icon": "api",
-      "items": ["GraphQL", "REST API", "NestJS integration", "Apollo Server", "JSON", "JWT authentication"]
+      "items": [
+        "GraphQL",
+        "REST API",
+        "NestJS integration",
+        "Apollo Server",
+        "JSON",
+        "JWT authentication"
+      ]
     },
     {
       "title": "Databases & Storage",
       "icon": "storage",
-      "items": ["MongoDB", "Hive", "SQLite", "SharedPreferences", "Firebase (Auth/Firestore/Storage)"]
+      "items": [
+        "MongoDB",
+        "Hive",
+        "SQLite",
+        "SharedPreferences",
+        "Firebase (Auth/Firestore/Storage)"
+      ]
     },
     {
       "title": "Development Tools",
       "icon": "build",
-      "items": ["Git & GitHub", "Postman", "VS Code", "Android Studio", "CI/CD pipelines"]
+      "items": [
+        "Git & GitHub",
+        "Postman",
+        "VS Code",
+        "Android Studio",
+        "CI/CD pipelines"
+      ]
     },
     {
       "title": "Testing & Quality",
       "icon": "verified",
-      "items": ["Unit Testing", "Widget Testing", "Code Reviews", "Performance Profiling"]
+      "items": [
+        "Unit Testing",
+        "Widget Testing",
+        "Code Reviews",
+        "Performance Profiling"
+      ]
     },
     {
       "title": "Platforms",
       "icon": "devices",
-      "items": ["Android", "iOS", "Web (Flutter Web)", "Windows Desktop"]
+      "items": [
+        "Android",
+        "iOS",
+        "Web (Flutter Web)",
+        "Windows Desktop"
+      ]
     }
   ],
-
   "projects": [
     {
       "title": "CropMate - Farmers Marketplace",
@@ -157,7 +284,14 @@
         "Government schemes integration for farmer benefits",
         "User authentication and profile management"
       ],
-      "tech": ["Flutter", "Dart", "Provider", "REST API", "Python Django", "Clean Architecture"],
+      "tech": [
+        "Flutter",
+        "Dart",
+        "Provider",
+        "REST API",
+        "Python Django",
+        "Clean Architecture"
+      ],
       "links": {
         "github": "https://github.com/AmosPeterAlex"
       }
@@ -172,7 +306,15 @@
         "Responsive UI with smooth navigation",
         "Optimized loading and caching for better performance"
       ],
-      "tech": ["Flutter", "Dart", "Provider", "REST API", "newsapi.org", "URL Launcher", "Share Plus"],
+      "tech": [
+        "Flutter",
+        "Dart",
+        "Provider",
+        "REST API",
+        "newsapi.org",
+        "URL Launcher",
+        "Share Plus"
+      ],
       "links": {
         "github": "https://github.com/AmosPeterAlex"
       }
@@ -187,13 +329,20 @@
         "Real-time feed updates with infinite scroll pagination",
         "Image caching and optimization for fast loading"
       ],
-      "tech": ["Flutter", "Dart", "Django REST Framework", "Provider", "Image Upload", "Authentication", "Caching"],
+      "tech": [
+        "Flutter",
+        "Dart",
+        "Django REST Framework",
+        "Provider",
+        "Image Upload",
+        "Authentication",
+        "Caching"
+      ],
       "links": {
         "github": "https://github.com/AmosPeterAlex"
       }
     }
   ],
-
   "contact": {
     "title": "Let's Build Something Together",
     "description": "I'm currently open to new opportunities, freelance projects, and collaborations. Whether you have a project in mind or just want to connect, feel free to reach out!",
@@ -210,7 +359,6 @@
       "location": "Kollam, Kerala, India"
     }
   },
-
   "footer": {
     "copyright": "© 2024 Amos P Alex. All rights reserved.",
     "tagline": "Built with Flutter-inspired precision"
