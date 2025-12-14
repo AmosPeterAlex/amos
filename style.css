@@ -9,7 +9,8 @@
     --btn-secondary-bg: #ececec;
 
     /* Magnification Defaults */
-    /* Color removed */
+    --mag-scale-heading: 1.1;
+    --mag-scale-text: 1.03;
 
     /* Layout */
     --container-width: 1100px;
@@ -72,6 +73,14 @@ body {
     /* Prevent blurry text scaling in some browsers */
     -webkit-font-smoothing: antialiased;
     backface-visibility: hidden;
+}
+
+/* Magnetic Button */
+.magnetic-btn {
+    display: inline-block;
+    will-change: transform;
+    /* We use JS for the active state, but a small transition ensures smooth return */
+    transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 /* Fixed Background Canvas */
