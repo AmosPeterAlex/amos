@@ -7,6 +7,9 @@
     --accent-color: #000000;
     --btn-text: #ffffff;
     --btn-secondary-bg: #ececec;
+    
+    /* Magnification Defaults */
+    --mag-target-color: #000000; /* Dark text on light bg */
 
     /* Layout */
     --container-width: 1100px;
@@ -21,6 +24,7 @@
     --accent-color: #ffffff;
     --btn-text: #000000;
     --btn-secondary-bg: #333333;
+    --mag-target-color: #ffffff; /* Light text on dark bg */
 }
 
 /* Alternate Color Theme */
@@ -55,6 +59,19 @@ body {
     min-height: 100vh;
     transition: color 0.3s ease;
     /* Smooth text transition only, bg handled by wave/canvas */
+}
+
+/* Magnification Effect */
+.magnify-char {
+    display: inline-block;
+    vertical-align: top;
+    will-change: transform, color;
+    transform-origin: center bottom;
+    /* Optional: subtle transition for color, but transform is managed by JS/RAF for partial frames */
+    transition: color 0.1s ease-out; 
+    /* Prevent blurry text scaling in some browsers */
+    -webkit-font-smoothing: antialiased;
+    backface-visibility: hidden;
 }
 
 /* Fixed Background Canvas */

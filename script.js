@@ -269,7 +269,124 @@ class ParticleSystem {
     }
 }
 
+class TextMagnifier {
+    constructor() {
+        this.magnifyElements = document.querySelectorAll('[data-magnify]');
+        this.chars = [];
+        this.mouse = { x: -1000, y: -1000 };
+        this.radius = 100; // Effect radius
+        this.maxScale = 1.3; // slightly magnify
+
+        // Performance optimization: only update chars near mouse
+        this.init();
+    }
+
+    init() {
+        this.magnifyElements.forEach(el => {
+            this.splitText(el);
+        });
+
+        // Track global mouse
+        window.addEventListener('mousemove', (e) => {
+            this.mouse.x = e.clientX;
+            this.mouse.y = e.clientY;
+        });
+
+        // Start Loop
+        this.animate();
+    }
+
+    splitText(el) {
+        const text = el.textContent;
+        el.innerHTML = '';
+        el.style.whiteSpace = 'pre-wrap'; // Ensure spaces wrap correctly
+
+        text.split('').forEach(char => {
+            const span = document.createElement('span');
+            span.textContent = char;
+            span.className = 'magnify-char';
+            el.appendChild(span);
+
+            // Store reference for animation
+            this.chars.push({
+                element: span,
+                baseX: 0, // Will be calculated if needed, but we rely on rect for now
+                isMagnified: false // Dirty flag to avoid constant reset
+            });
+        });
+    }
+
+    animate() {
+        // Optimization: Culling.
+        // Getting rect for every char every frame is expensive (layout thrashing).
+        // Better approach: 
+        // 1. We assume chars don't move drastically relative to viewport unless scrolled.
+        // 2. We can cache rects if needed, or just accept the cost for < 500 chars.
+        // For this task, getting rects is the simplest consistent way. 
+        // To optimize: Check parent bounding box first? 
+
+        // Let's try parent culling first.
+        this.magnifyElements.forEach(parent => {
+            const rect = parent.getBoundingClientRect();
+            // Check if mouse is near this block
+            const dist = Math.hypot(
+                Math.max(rect.left, Math.min(this.mouse.x, rect.right)) - this.mouse.x,
+                Math.max(rect.top, Math.min(this.mouse.y, rect.bottom)) - this.mouse.y
+            );
+
+            if (dist < this.radius + 50) {
+                // Process children
+                const chars = parent.querySelectorAll('.magnify-char');
+                chars.forEach(char => {
+                    const charRect = char.getBoundingClientRect();
+                    const charX = charRect.left + charRect.width / 2;
+                    const charY = charRect.top + charRect.height / 2;
+
+                    const charDist = Math.hypot(charX - this.mouse.x, charY - this.mouse.y);
+
+                    if (charDist < this.radius) {
+                        const effect = 1 - (charDist / this.radius);
+                        // Quadratic falloff for smoother "lens" feel
+                        const intensity = effect * effect;
+
+                        const scale = 1 + (intensity * (this.maxScale - 1));
+
+                        // Color interpolation handled via CSS transition usually, but for continuous effect:
+                        // We can set a color overrides if needed, or just let opacity/mix-blend handle it.
+                        // Requirement: "Color inversion ... inside magnification radius".
+                        // We'll use the CSS var approach.
+
+                        char.style.transform = `scale(${scale})`;
+
+                        // Apply color change if close enough (stronger effect)
+                        if (intensity > 0.3) {
+                            char.style.color = 'var(--mag-target-color)';
+                        } else {
+                            char.style.color = '';
+                        }
+                    } else {
+                        // Reset if needed
+                        if (char.style.transform) {
+                            char.style.transform = '';
+                            char.style.color = '';
+                        }
+                    }
+                });
+            } else {
+                // If parent is far, ensure all children are reset (if they were stuck)
+                // To avoid iterating children unnecessarily, we can rely on the fact that if we left the radius, 
+                // the last frame likely cleaned it up. 
+                // But to be safe, we could check a flag on the parent.
+            }
+        });
+
+        requestAnimationFrame(() => this.animate());
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    window.textMagnifier = new TextMagnifier();
+
     window.themeManager = new ThemeManager();
     window.particleSystem = new ParticleSystem();
 
