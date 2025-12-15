@@ -95,6 +95,20 @@ body {
     /* Allows clicks to pass through */
 }
 
+#hero-blob {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    z-index: -1;
+    pointer-events: none;
+    filter: blur(80px);
+    /* Increased blur for softer look */
+    opacity: 0.6;
+}
+
 /* Layout Containers */
 .container {
     max-width: var(--container-width);
@@ -209,6 +223,8 @@ body {
 
 /* Sections */
 .hero {
+    position: relative;
+    /* meaningful context for absolute blob */
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -217,7 +233,8 @@ body {
     text-align: center;
     padding: 0 1rem;
     padding-top: var(--nav-height);
-    /* Account for fixed nav */
+    overflow: hidden;
+    /* Clip blob if it expands too much */
 }
 
 .hero-title {
