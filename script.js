@@ -271,13 +271,13 @@ class ParticleSystem {
 
 class TextMagnifier {
     constructor() {
-        this.magnifyElements = document.querySelectorAll('[data-magnify]');
+        this.magnifyElements = document.querySelectorAll('[data-magnify], h1, h2, .hero-subtitle');
         this.chars = [];
         this.mouse = { x: -1000, y: -1000 };
-        this.radius = 100; // Effect radius
-        this.maxScale = 1.3; // slightly magnify
+        this.radius = 120; // Increased radius for smooth pull
+        this.maxScale = 1.3;
+        this.maxPull = 14; // Pixels to pull towards mouse
 
-        // Performance optimization: only update chars near mouse
         this.init();
     }
 
@@ -299,76 +299,59 @@ class TextMagnifier {
     splitText(el) {
         const text = el.textContent;
         el.innerHTML = '';
-        el.style.whiteSpace = 'pre-wrap'; // Ensure spaces wrap correctly
+        el.style.whiteSpace = 'pre-wrap';
 
         text.split('').forEach(char => {
             const span = document.createElement('span');
             span.textContent = char;
             span.className = 'magnify-char';
             el.appendChild(span);
-
-            // Store reference for animation
-            this.chars.push({
-                element: span,
-                baseX: 0, // Will be calculated if needed, but we rely on rect for now
-                isMagnified: false // Dirty flag to avoid constant reset
-            });
         });
     }
 
     animate() {
-        // Optimization: Culling.
-        // Getting rect for every char every frame is expensive (layout thrashing).
-        // Better approach: 
-        // 1. We assume chars don't move drastically relative to viewport unless scrolled.
-        // 2. We can cache rects if needed, or just accept the cost for < 500 chars.
-        // For this task, getting rects is the simplest consistent way. 
-        // To optimize: Check parent bounding box first? 
-
-        // Let's try parent culling first.
         this.magnifyElements.forEach(parent => {
             const rect = parent.getBoundingClientRect();
-            // Check if mouse is near this block
             const dist = Math.hypot(
                 Math.max(rect.left, Math.min(this.mouse.x, rect.right)) - this.mouse.x,
                 Math.max(rect.top, Math.min(this.mouse.y, rect.bottom)) - this.mouse.y
             );
 
             if (dist < this.radius + 50) {
-                // Process children
                 const chars = parent.querySelectorAll('.magnify-char');
                 chars.forEach(char => {
                     const charRect = char.getBoundingClientRect();
                     const charX = charRect.left + charRect.width / 2;
                     const charY = charRect.top + charRect.height / 2;
 
-                    const charDist = Math.hypot(charX - this.mouse.x, charY - this.mouse.y);
+                    const dx = this.mouse.x - charX;
+                    const dy = this.mouse.y - charY;
+                    const charDist = Math.sqrt(dx * dx + dy * dy);
 
                     if (charDist < this.radius) {
+                        // Calculate intensity (0 to 1)
                         const effect = 1 - (charDist / this.radius);
-                        // Quadratic falloff for smoother "lens" feel
-                        const intensity = effect * effect;
+                        const intensity = effect * effect; // Quadratic ease
 
+                        // Scale
                         const scale = 1 + (intensity * (this.maxScale - 1));
 
-                        // Color interpolation handled via CSS transition usually, but for continuous effect:
-                        // We can set a color overrides if needed, or just let opacity/mix-blend handle it.
-                        // Requirement: "Color inversion ... inside magnification radius".
-                        // We'll use the CSS var approach.
+                        // Magnetic Pull (Move towards mouse)
+                        const pullFactor = intensity * this.maxPull;
+                        // const transX = (dx / charDist) * pullFactor;
+                        // const transY = (dy / charDist) * pullFactor;
 
-                        char.style.transform = `scale(${scale})`;
+                        // Limit pull to avoid extreme overlap, maybe dampen it
+                        const transX = dx * intensity * 0.2;
+                        const transY = dy * intensity * 0.2;
+
+                        char.style.transform = `translate(${transX}px, ${transY}px) scale(${scale})`;
                     } else {
-                        // Reset if needed
                         if (char.style.transform) {
                             char.style.transform = '';
                         }
                     }
                 });
-            } else {
-                // If parent is far, ensure all children are reset (if they were stuck)
-                // To avoid iterating children unnecessarily, we can rely on the fact that if we left the radius, 
-                // the last frame likely cleaned it up. 
-                // But to be safe, we could check a flag on the parent.
             }
         });
 
@@ -376,11 +359,131 @@ class TextMagnifier {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    window.textMagnifier = new TextMagnifier();
+class CustomCursor {
+    constructor() {
+        this.ring = document.createElement('div');
+        this.ring.className = 'cursor-ring';
 
+        document.body.appendChild(this.ring);
+
+        this.mouse = { x: -100, y: -100 };
+        this.ringPos = { x: -100, y: -100 };
+
+        this.init();
+    }
+
+    init() {
+        // Track mouse
+        window.addEventListener('mousemove', (e) => {
+            this.mouse.x = e.clientX;
+            this.mouse.y = e.clientY;
+
+            // Initial position to avoid flying in from corner on load
+            if (this.ringPos.x === -100) {
+                this.ringPos = { x: this.mouse.x, y: this.mouse.y };
+            }
+        });
+
+        // Hover listeners for scale effect
+        this.addHoverListeners();
+
+        // Start loop
+        this.animate();
+    }
+
+    addHoverListeners() {
+        const hoverables = document.querySelectorAll('a, button, .logo, .theme-btn, .project-card, .social-icon, input, textarea');
+
+        hoverables.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                document.body.classList.add('cursor-hover');
+            });
+            el.addEventListener('mouseleave', () => {
+                document.body.classList.remove('cursor-hover');
+            });
+        });
+    }
+
+    lerp(start, end, factor) {
+        return start + (end - start) * factor;
+    }
+
+    animate() {
+        // Smooth follow with slower inertia (0.05)
+        this.ringPos.x = this.lerp(this.ringPos.x, this.mouse.x, 0.05);
+        this.ringPos.y = this.lerp(this.ringPos.y, this.mouse.y, 0.05);
+
+        // Apply transforms
+        this.ring.style.transform = `translate(${this.ringPos.x}px, ${this.ringPos.y}px) translate(-50%, -50%)`;
+
+        requestAnimationFrame(() => this.animate());
+    }
+}
+
+// Enhance TextMagnifier with Magnetic Pull
+class MagneticText {
+    constructor() {
+        // Re-using data-magnify attribute or targeting specific text
+        this.textElements = document.querySelectorAll('[data-magnify], p, h1, h2, h3, h4, h5, h6, span, label');
+        // Filter out large blocks, keep it to reasonable text containers if possible, 
+        // but for "premium feel" on everything, we need to be careful about performance.
+        // Let's restrict to headings and specific marked text for magnetism + slight shift on paragraphs.
+
+        this.mouse = { x: -1000, y: -1000 };
+        this.radius = 100;
+
+        window.addEventListener('mousemove', (e) => {
+            this.mouse.x = e.clientX;
+            this.mouse.y = e.clientY;
+        });
+
+        // Start animation loop
+        this.animate();
+    }
+
+    animate() {
+        // Optimization: Only animate elements currently in viewport or close to mouse?
+        // Simple bounding box check for active elements.
+
+        // Note: Splitting every paragraph is bad for performance. 
+        // We will Apply magnetism to WHOLE WORDS or Lines for general text, 
+        // and CHARACTERS for headings/hero.
+
+        // For this task request: "When hovering text, apply a mild magnetic pull where characters slightly distort or shift"
+        // Existing TextMagnifier does character splitting. Let's assume we want to KEEP that for [data-magnify] 
+        // and maybe apply a simple translation to other block elements? 
+        // Actually, the user asked for "cursor ... magnetic pull ... characters".
+        // I will stick to the existing TextMagnifier logic but ADD the magnetic pull shift.
+
+        // We need to modify the existing TextMagnifier loop or replace it.
+        // I will REPLACE the window.textMagnifier instantiation with this new logical block 
+        // that handles both magnification and magnetic pull.
+    }
+}
+
+// Updating existing TextMagnifier to include Magnetic Pull
+// (Re-definition to overwrite previous class logic if we could, but here we are appending/editing)
+// Best approach: I will edit the existing TextMagnifier class in-place in the next tool call, 
+// so here I will just append the CustomCursor and init code.
+// Wait, I am replacing the end of the file. I should rewrite the DOMContentLoaded block.
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Check if device is touch capable to avoid custom cursor frustration
+    const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+    if (!isTouch && window.matchMedia('(pointer: fine)').matches) {
+        window.customCursor = new CustomCursor();
+    }
+
+    // Initialize existing systems
     window.themeManager = new ThemeManager();
     window.particleSystem = new ParticleSystem();
+
+    // Updated TextMagnifier (we will patch the class above in a separate edit, 
+    // or we can instantiate a new MagneticText class if I renamed it).
+    // Let's use the existing class but I need to modify it. 
+    // For now, I'll instantiate the OLD one, but I plan to modify it.
+    window.textMagnifier = new TextMagnifier();
 
     // Mobile Navigation
     const hamburger = document.querySelector('.hamburger');
@@ -410,3 +513,4 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
