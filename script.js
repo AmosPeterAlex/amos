@@ -711,6 +711,135 @@ class MagneticText {
 // so here I will just append the CustomCursor and init code.
 // Wait, I am replacing the end of the file. I should rewrite the DOMContentLoaded block.
 
+// Sound Manager for UI Effects
+class SoundManager {
+    constructor() {
+        this.toggleBtn = document.getElementById('sound-toggle');
+        this.enabled = localStorage.getItem('sound-enabled') === 'true'; // Default false if not set? Request says "Sound preference must persist". Let's default to false or true? "Users must be able to turn sounds ON/OFF". Usually opt-in or opt-out. Let's default to OFF to be safe/non-intrusive, or ON if "premium experience" implies it. Let's default to FALSE as per "Sound volume should be low and non-intrusive" implies potential annoyance. Actually, let's default to TRUE but with a check, or FALSE. Let's go with FALSE to be safe, or TRUE if user didn't specify default. Let's assume TRUE for "wow" factor but check legacy.
+        // Actually, let's default to FALSE to avoid auto-playing sound issues, but "premium" usually means ON. 
+        // Let's check if null.
+        if (localStorage.getItem('sound-enabled') === null) {
+            this.enabled = true; // Default ON
+        }
+
+        this.ctx = null;
+        // We defer AudioContext creation until interaction to avoid warnings/errors
+
+        this.init();
+    }
+
+    init() {
+        this.updateUI();
+
+        if (this.toggleBtn) {
+            this.toggleBtn.addEventListener('click', () => this.toggle());
+        }
+
+        this.setupListeners();
+    }
+
+    updateUI() {
+        if (this.toggleBtn) {
+            this.toggleBtn.setAttribute('data-sound', this.enabled ? 'on' : 'off');
+            this.toggleBtn.setAttribute('aria-label', this.enabled ? 'Mute Sound' : 'Enable Sound');
+        }
+    }
+
+    toggle() {
+        this.enabled = !this.enabled;
+        localStorage.setItem('sound-enabled', this.enabled);
+        this.updateUI();
+
+        // If enabling, we might need to resume/create context immediately (if inside user gesture)
+        if (this.enabled) {
+            this.getContext();
+            // Play a test sound to confirm enabled? Optional.
+            this.playHoverSound();
+        }
+    }
+
+    getContext() {
+        if (!this.ctx) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            this.ctx = new AudioContext();
+        }
+        if (this.ctx.state === 'suspended') {
+            this.ctx.resume();
+        }
+        return this.ctx;
+    }
+
+    playHoverSound() {
+        if (!this.enabled) return;
+
+        const ctx = this.getContext();
+
+        // Premium "Pop" / "Thock" sound
+        // Oscillator: Sine or Triangle
+        // Envelope: very short attack, short decay
+        // Filter: Lowpass to soften it
+
+        const t = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        // Sound Design
+        osc.type = 'sine';
+        // Pitch drop for "thock"
+        osc.frequency.setValueAtTime(600, t);
+        osc.frequency.exponentialRampToValueAtTime(100, t + 0.1);
+
+        // Volume Envelope
+        gain.gain.setValueAtTime(0, t);
+        gain.gain.linearRampToValueAtTime(0.05, t + 0.01); // Attack (low volume)
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1); // Decay
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(t);
+        osc.stop(t + 0.1);
+    }
+
+    setupListeners() {
+        // Target interactive elements
+        const targets = document.querySelectorAll('a, button, [role="button"], .project-card, .social-icon, input, textarea');
+
+        targets.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                this.playHoverSound();
+            });
+        });
+
+        // Also listen for new elements if logic changes (MutationObserver) 
+        // but for now static list is fine. 
+        // Note: Dynamically added elements won't have sounds with this simple approach.
+        // Better to use delegation if possible, or just re-run setup.
+        // Event Delegation for mouseenter:
+        document.body.addEventListener('mouseenter', (e) => {
+            // mouseenter doesn't bubble, need to use mouseover or capture.
+            // mouseover bubbles.
+        }, true);
+
+        // Let's use delegation with 'mouseover' and check target, 
+        // to handle current and future elements.
+        document.addEventListener('mouseover', (e) => {
+            const target = e.target.closest('a, button, [role="button"], .project-card, .social-icon, input, textarea');
+            if (target && !target.dataset.soundAttached) {
+                // To avoid repeated plays while moving INSIDE the element (mouseover fires again for children)
+                // We track "mouseenter" logic manually or just use the listener on the element.
+                // Re-attaching listeners is messy.
+                // Simple approach: Use a flag or check relatedTarget?
+
+                // Let's just stick to the initial attach for simplicity as requested "performant". 
+                // Delegation for hover sound can be tricky with bubbling.
+            }
+        });
+
+        // Actually, the simpler "querySelectorAll" is fine for this static site.
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     // Check if device is touch capable to avoid custom cursor frustration
     const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
@@ -723,6 +852,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.themeManager = new ThemeManager();
     window.particleSystem = new ParticleSystem();
     window.blobAnimation = new BlobAnimation();
+    window.soundManager = new SoundManager();
 
     // Updated TextMagnifier (we will patch the class above in a separate edit, 
     // or we can instantiate a new MagneticText class if I renamed it).

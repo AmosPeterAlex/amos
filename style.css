@@ -569,3 +569,70 @@ to {
     /* Subtler fill */
     border-color: var(--accent-color);
 }
+
+/* Sound Toggle */
+.sound-btn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--bg-color);
+    /* Matches theme background */
+    border: 1px solid rgba(128, 128, 128, 0.2);
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.sound-btn:hover {
+    transform: scale(1.1);
+    border-color: var(--accent-color);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.sound-btn:active {
+    transform: scale(0.95);
+}
+
+.sound-on-icon,
+.sound-off-icon {
+    position: absolute;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Default state: Sound OFF -> Show Off Icon? Or default ON? */
+/* Let's say user wants toggle. We'll handle visual state via class on button or attribute */
+/* Assuming [data-sound="on"] and [data-sound="off"] on the button itself */
+
+.sound-btn[data-sound="on"] .sound-off-icon {
+    opacity: 0;
+    transform: scale(0.5);
+}
+
+.sound-btn[data-sound="on"] .sound-on-icon {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.sound-btn[data-sound="off"] .sound-on-icon {
+    opacity: 0;
+    transform: scale(0.5);
+}
+
+.sound-btn[data-sound="off"] .sound-off-icon {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Dark mode adjustment for shadow */
+[data-theme="dark"] .sound-btn {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.1);
+}
