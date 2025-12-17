@@ -8,6 +8,10 @@
     --btn-text: #ffffff;
     --btn-secondary-bg: #ececec;
 
+    /* Magnification Defaults */
+    --mag-scale-heading: 1.1;
+    --mag-scale-text: 1.03;
+
     /* Layout */
     --container-width: 1100px;
     --nav-height: 80px;
@@ -21,6 +25,7 @@
     --accent-color: #ffffff;
     --btn-text: #000000;
     --btn-secondary-bg: #333333;
+    /* Color removed */
 }
 
 /* Alternate Color Theme */
@@ -57,6 +62,27 @@ body {
     /* Smooth text transition only, bg handled by wave/canvas */
 }
 
+/* Magnification Effect */
+.magnify-char {
+    display: inline-block;
+    vertical-align: top;
+    will-change: transform;
+    transform-origin: center bottom;
+    /* Optional: subtle transition for color, but transform is managed by JS/RAF for partial frames */
+    /* transition: color 0.1s ease-out; removed */
+    /* Prevent blurry text scaling in some browsers */
+    -webkit-font-smoothing: antialiased;
+    backface-visibility: hidden;
+}
+
+/* Magnetic Button */
+.magnetic-btn {
+    display: inline-block;
+    will-change: transform;
+    /* We use JS for the active state, but a small transition ensures smooth return */
+    transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
 /* Fixed Background Canvas */
 #particle-canvas {
     position: fixed;
@@ -67,6 +93,20 @@ body {
     z-index: -1;
     pointer-events: none;
     /* Allows clicks to pass through */
+}
+
+#hero-blob {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    z-index: -1;
+    pointer-events: none;
+    filter: blur(80px);
+    /* Increased blur for softer look */
+    opacity: 0.6;
 }
 
 /* Layout Containers */
@@ -183,6 +223,8 @@ body {
 
 /* Sections */
 .hero {
+    position: relative;
+    /* meaningful context for absolute blob */
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -191,7 +233,8 @@ body {
     text-align: center;
     padding: 0 1rem;
     padding-top: var(--nav-height);
-    /* Account for fixed nav */
+    overflow: hidden;
+    /* Clip blob if it expands too much */
 }
 
 .hero-title {
@@ -490,14 +533,106 @@ footer {
     display: none;
 }
 
-@keyframes navLinkFade {
-    from {
-        opacity: 0;
-        transform: translateX(50px);
-    }
+to {
+    opacity: 1;
+    transform: translateX(0);
+}
 
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
+/* } */
+
+/* Custom Cursor */
+/* Default cursor is visible, ring follows */
+
+.cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.cursor-ring {
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--text-color);
+    opacity: 0.6;
+    transition: width 0.3s, height 0.3s, background-color 0.3s, border-color 0.3s;
+}
+
+/* Hover State */
+.cursor-hover .cursor-ring {
+    width: 50px;
+    height: 50px;
+    background-color: rgba(128, 128, 128, 0.05);
+    /* Subtler fill */
+    border-color: var(--accent-color);
+}
+
+/* Sound Toggle */
+.sound-btn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--bg-color);
+    /* Matches theme background */
+    border: 1px solid rgba(128, 128, 128, 0.2);
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.sound-btn:hover {
+    transform: scale(1.1);
+    border-color: var(--accent-color);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.sound-btn:active {
+    transform: scale(0.95);
+}
+
+.sound-on-icon,
+.sound-off-icon {
+    position: absolute;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Default state: Sound OFF -> Show Off Icon? Or default ON? */
+/* Let's say user wants toggle. We'll handle visual state via class on button or attribute */
+/* Assuming [data-sound="on"] and [data-sound="off"] on the button itself */
+
+.sound-btn[data-sound="on"] .sound-off-icon {
+    opacity: 0;
+    transform: scale(0.5);
+}
+
+.sound-btn[data-sound="on"] .sound-on-icon {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.sound-btn[data-sound="off"] .sound-on-icon {
+    opacity: 0;
+    transform: scale(0.5);
+}
+
+.sound-btn[data-sound="off"] .sound-off-icon {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Dark mode adjustment for shadow */
+[data-theme="dark"] .sound-btn {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.1);
 }
