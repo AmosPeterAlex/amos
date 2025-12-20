@@ -860,32 +860,68 @@ document.addEventListener('DOMContentLoaded', () => {
     // For now, I'll instantiate the OLD one, but I plan to modify it.
     window.textMagnifier = new TextMagnifier();
 
-    // Mobile Navigation
-    const hamburger = document.querySelector('.hamburger');
-    const navLinks = document.querySelector('.nav-links');
-    const links = document.querySelectorAll('.nav-links li');
-    const body = document.body;
+    // Mobile Navigation Logic Removed (No longer needed)
 
-    if (hamburger) {
-        hamburger.addEventListener('click', () => {
-            body.classList.toggle('nav-active');
+    // NEW: Navigation Manager (Smooth Scroll & ScrollSpy)
+    const navItems = document.querySelectorAll('.nav-item');
+    const sections = document.querySelectorAll('section');
 
-            // Animate Links
-            links.forEach((link, index) => {
-                if (link.style.animation) {
-                    link.style.animation = '';
-                } else {
-                    link.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 + 0.3}s`;
-                }
-            });
-        });
-    }
+    // 1. Smooth Scroll
+    navItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = item.getAttribute('href');
+            const targetSection = document.querySelector(targetId === '#' ? 'body' : targetId); // Handle '#' as top
 
-    // Close nav when clicking a link
-    links.forEach(link => {
-        link.addEventListener('click', () => {
-            body.classList.remove('nav-active');
+            if (targetSection) {
+                // Update Active State Immediately
+                navItems.forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+
+                // Smooth Scroll
+                window.scrollTo({
+                    top: targetSection.offsetTop,
+                    behavior: 'smooth'
+                });
+            }
         });
     });
+
+    // 2. ScrollSpy (Active Highlight)
+    const observerOptions = {
+        root: null,
+        rootMargin: '-20% 0px -50% 0px', // Activate when section is near center
+        threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Get ID
+                const id = entry.target.getAttribute('id');
+                let navLink;
+                
+                if (entry.target.classList.contains('hero')) {
+                     // Hero maps to Home
+                     navLink = document.querySelector('.nav-item[href="#"]');
+                } else {
+                     navLink = document.querySelector(`.nav-item[href="#${id}"]`);
+                }
+
+                if (navLink) {
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    navLink.classList.add('active');
+                }
+            }
+        });
+    }, observerOptions);
+
+    sections.forEach(section => observer.observe(section));
+    // Also observe Hero specifically if it doesn't have an ID
+    const hero = document.querySelector('.hero');
+    if(hero) observer.observe(hero);
+
+
+    // Close nav when clicking a link logic removed (no burger menu)
 });
 
