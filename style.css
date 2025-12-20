@@ -142,7 +142,8 @@ body {
     align-items: center;
 }
 
-.theme-btn, .sound-btn {
+.theme-btn,
+.sound-btn {
     background: none;
     border: none;
     cursor: pointer;
@@ -155,15 +156,17 @@ body {
     justify-content: center;
     width: 44px;
     height: 44px;
-    background-color: rgba(255,255,255, 0.05); /* Subtle background */
+    background-color: rgba(255, 255, 255, 0.05);
+    /* Subtle background */
     backdrop-filter: blur(4px);
     border: 1px solid rgba(128, 128, 128, 0.1);
 }
 
-.theme-btn:hover, .sound-btn:hover {
+.theme-btn:hover,
+.sound-btn:hover {
     background-color: var(--btn-secondary-bg);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .sun-icon,
@@ -200,14 +203,17 @@ body {
     opacity: 0;
     transform: scale(0.5);
 }
+
 .sound-btn[data-sound="on"] .sound-on-icon {
     opacity: 1;
     transform: scale(1);
 }
+
 .sound-btn[data-sound="off"] .sound-on-icon {
     opacity: 0;
     transform: scale(0.5);
 }
+
 .sound-btn[data-sound="off"] .sound-off-icon {
     opacity: 1;
     transform: scale(1);
@@ -232,8 +238,10 @@ body {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.3);
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
-    opacity: 0; /* Starts hidden, JS fades it in */
-    animation: slideUpNav 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards 1s; /* Delay load */
+    opacity: 0;
+    /* Starts hidden, JS fades it in */
+    animation: slideUpNav 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards 1s;
+    /* Delay load */
 }
 
 @keyframes slideUpNav {
@@ -241,6 +249,7 @@ body {
         opacity: 0;
         transform: translateX(-50%) translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateX(-50%) translateY(0);
@@ -283,7 +292,8 @@ body {
 .nav-item.active svg {
     transform: translateY(-2px);
     stroke: var(--accent-color);
-    fill: rgba(0, 0, 0, 0.05); /* Subtle fill on active */
+    fill: rgba(0, 0, 0, 0.05);
+    /* Subtle fill on active */
 }
 
 [data-theme="dark"] .bottom-nav {
@@ -302,11 +312,12 @@ body {
         top: 1.5rem;
         left: 1.5rem;
     }
+
     .top-controls {
         top: 1.5rem;
         right: 1.5rem;
     }
-    
+
     .bottom-nav {
         bottom: 1.5rem;
         padding: 0.75rem 1rem;
@@ -314,15 +325,15 @@ body {
         width: auto;
         max-width: 90%;
     }
-    
+
     .nav-item span {
         display: none;
     }
-    
+
     .nav-item {
         padding: 0.5rem;
     }
-    
+
     .nav-item svg {
         width: 24px;
         height: 24px;
@@ -340,7 +351,6 @@ body {
     align-items: center;
     text-align: center;
     padding: 0 1rem;
-    padding-top: var(--nav-height);
     overflow: hidden;
     /* Clip blob if it expands too much */
 }
@@ -368,6 +378,13 @@ body {
     justify-content: center;
     gap: 1.5rem;
     width: 100%;
+}
+
+.hero-actions .btn {
+    min-width: 160px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .btn {
