@@ -221,22 +221,25 @@ body {
 
 
 /* Bottom Navigation */
+/* Bottom Navigation */
 .bottom-nav {
     position: fixed;
     bottom: 2rem;
     left: 50%;
     transform: translateX(-50%) translateY(0);
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    background: rgba(255, 255, 255, 0.08);
+    /* Light mode glass */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     padding: 0.75rem 1.5rem;
     border-radius: 50px;
     display: flex;
     gap: 2rem;
     align-items: center;
     z-index: 1000;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    /* Soft shadow */
+    border: 1px solid rgba(255, 255, 255, 0.15);
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
     opacity: 0;
     /* Starts hidden, JS fades it in */
@@ -297,9 +300,10 @@ body {
 }
 
 [data-theme="dark"] .bottom-nav {
-    background: rgba(20, 20, 20, 0.7);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.25);
+    /* Dark mode glass */
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 [data-theme="dark"] .nav-item.active svg {
@@ -429,9 +433,9 @@ body {
 
 .text-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
-    max-width: 800px;
+    max-width: 100%;
 }
 
 .text-grid p {
@@ -765,4 +769,18 @@ to {
 [data-theme="dark"] .sound-btn {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Specific Mobile Adjustments (< 640px) */
+@media (max-width: 640px) {
+
+    /* Prevent overlap with bottom nav */
+    .sound-btn {
+        bottom: 90px;
+    }
+
+    /* Smaller section headings */
+    .content-section h2 {
+        font-size: clamp(1.4rem, 4vw, 2rem);
+    }
 }
