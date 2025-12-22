@@ -361,62 +361,271 @@ class TextMagnifier {
 
 class CustomCursor {
     constructor() {
-        this.ring = document.createElement('div');
-        this.ring.className = 'cursor-ring';
+        this.targetSelector = '.cursor-target, button, .btn, a, input, textarea, .nav-item, .project-card, .social-icon, .theme-btn, .sound-btn';
+        this.spinDuration = 2;
+        this.hoverDuration = 0.2;
+        this.parallaxOn = true;
+        this.constants = {
+            borderWidth: 3,
+            cornerSize: 12
+        };
 
-        document.body.appendChild(this.ring);
+        this.initDOM();
 
-        this.mouse = { x: -100, y: -100 };
-        this.ringPos = { x: -100, y: -100 };
-
-        this.init();
+        // Wait for GSAP before init logic (in case script loads faster, though local)
+        if (typeof gsap !== 'undefined') {
+            this.initLogic();
+        } else {
+            // Poll for GSAP just in case
+            const checkGsap = setInterval(() => {
+                if (typeof gsap !== 'undefined') {
+                    clearInterval(checkGsap);
+                    this.initLogic();
+                }
+            }, 50);
+        }
     }
 
-    init() {
-        // Track mouse
+    initDOM() {
+        // Create DOM Structure
+        // <div class="target-cursor-wrapper">
+        //   <div class="target-cursor-dot"></div>
+        //   <div class="target-cursor-corner corner-tl"></div> ...
+        // </div>
+
+        this.wrapper = document.createElement('div');
+        this.wrapper.className = 'target-cursor-wrapper';
+
+        this.dot = document.createElement('div');
+        this.dot.className = 'target-cursor-dot';
+
+        this.corners = [];
+        ['corner-tl', 'corner-tr', 'corner-br', 'corner-bl'].forEach(cls => {
+            const c = document.createElement('div');
+            c.className = `target-cursor-corner ${cls}`;
+            this.wrapper.appendChild(c);
+            this.corners.push(c);
+        });
+
+        this.wrapper.appendChild(this.dot);
+        document.body.appendChild(this.wrapper);
+    }
+
+    initLogic() {
+        // Refs for GSAP
+        this.spinTl = null;
+        this.isActive = false;
+        this.targetCornerPositions = null;
+        this.activeStrength = { current: 0 };
+        this.activeTarget = null;
+        this.resumeTimeout = null;
+
+        // Initial Set
+        gsap.set(this.wrapper, {
+            xPercent: -50,
+            yPercent: -50,
+            x: window.innerWidth / 2,
+            y: window.innerHeight / 2
+        });
+
+        // 1. Move Cursor
         window.addEventListener('mousemove', (e) => {
-            this.mouse.x = e.clientX;
-            this.mouse.y = e.clientY;
+            if (!this.wrapper) return;
+            gsap.to(this.wrapper, {
+                x: e.clientX,
+                y: e.clientY,
+                duration: 0.1,
+                ease: 'power3.out'
+            });
+        });
 
-            // Initial position to avoid flying in from corner on load
-            if (this.ringPos.x === -100) {
-                this.ringPos = { x: this.mouse.x, y: this.mouse.y };
+        // 2. Continuous Spin
+        this.createSpinTimeline();
+
+        // 3. Hover Logic (Mouse Over) - Delegation
+        document.addEventListener('mouseover', (e) => this.handleEnter(e));
+
+        // 4. Ticker for Interpolation
+        gsap.ticker.add(() => this.tick());
+
+        // 5. Click Effects
+        window.addEventListener('mousedown', () => {
+            gsap.to(this.dot, { scale: 0.7, duration: 0.3 });
+            gsap.to(this.wrapper, { scale: 0.9, duration: 0.2 });
+        });
+        window.addEventListener('mouseup', () => {
+            gsap.to(this.dot, { scale: 1, duration: 0.3 });
+            gsap.to(this.wrapper, { scale: 1, duration: 0.2 });
+        });
+    }
+
+    createSpinTimeline() {
+        if (this.spinTl) this.spinTl.kill();
+        this.spinTl = gsap.timeline({ repeat: -1 })
+            .to(this.wrapper, { rotation: '+=360', duration: this.spinDuration, ease: 'none' });
+    }
+
+    handleEnter(e) {
+        // Find closest target
+        const target = e.target.closest(this.targetSelector);
+        if (!target || target === this.activeTarget) return;
+
+        // Cleanup old if exists
+        if (this.activeTarget) {
+            this.cleanupTarget(this.activeTarget);
+        }
+        if (this.resumeTimeout) {
+            clearTimeout(this.resumeTimeout);
+            this.resumeTimeout = null;
+        }
+
+        this.activeTarget = target;
+
+        // Stop Spin
+        this.corners.forEach(c => gsap.killTweensOf(c));
+        gsap.killTweensOf(this.wrapper, 'rotation');
+        if (this.spinTl) this.spinTl.pause();
+        gsap.set(this.wrapper, { rotation: 0 });
+
+        // Calculate Corners
+        const rect = target.getBoundingClientRect();
+        const { borderWidth, cornerSize } = this.constants;
+
+        this.targetCornerPositions = [
+            { x: rect.left - borderWidth, y: rect.top - borderWidth },
+            { x: rect.right + borderWidth - cornerSize, y: rect.top - borderWidth },
+            { x: rect.right + borderWidth - cornerSize, y: rect.bottom + borderWidth - cornerSize },
+            { x: rect.left - borderWidth, y: rect.bottom + borderWidth - cornerSize }
+        ];
+
+        this.isActive = true;
+
+        // Animate Strength
+        gsap.to(this.activeStrength, {
+            current: 1,
+            duration: this.hoverDuration,
+            ease: 'power2.out'
+        });
+
+        // Add Leave Listener
+        this.currentLeaveHandler = () => this.handleLeave();
+        target.addEventListener('mouseleave', this.currentLeaveHandler);
+    }
+
+    handleLeave() {
+        if (!this.activeTarget) return;
+
+        const target = this.activeTarget;
+        this.cleanupTarget(target);
+
+        this.isActive = false;
+        this.activeTarget = null;
+        this.targetCornerPositions = null;
+
+        // Reset Strength
+        gsap.set(this.activeStrength, { current: 0, overwrite: true });
+
+        // Animate Corners back to center
+        const { cornerSize } = this.constants;
+        const positions = [
+            { x: -cornerSize * 1.5, y: -cornerSize * 1.5 }, // TL
+            { x: cornerSize * 0.5, y: -cornerSize * 1.5 }, // TR
+            { x: cornerSize * 0.5, y: cornerSize * 0.5 }, // BR
+            { x: -cornerSize * 1.5, y: cornerSize * 0.5 } // BL
+        ];
+
+        this.corners.forEach((corner, index) => {
+            gsap.to(corner, {
+                x: positions[index].x,
+                y: positions[index].y,
+                duration: 0.3,
+                ease: 'power3.out'
+            });
+        });
+
+        // Resume Spin logic
+        this.resumeTimeout = setTimeout(() => {
+            if (!this.activeTarget && this.spinTl) {
+                const currentRot = gsap.getProperty(this.wrapper, 'rotation');
+                const normRot = currentRot % 360;
+
+                this.spinTl.kill();
+                this.spinTl = gsap.timeline({ repeat: -1 })
+                    .to(this.wrapper, { rotation: '+=360', duration: this.spinDuration, ease: 'none' });
+
+                gsap.to(this.wrapper, {
+                    rotation: normRot + 360,
+                    duration: this.spinDuration * (1 - normRot / 360),
+                    ease: 'none',
+                    onComplete: () => {
+                        if (this.spinTl) this.spinTl.restart();
+                    }
+                });
             }
-        });
-
-        // Hover listeners for scale effect
-        this.addHoverListeners();
-
-        // Start loop
-        this.animate();
+        }, 50);
     }
 
-    addHoverListeners() {
-        const hoverables = document.querySelectorAll('a, button, .logo, .theme-btn, .project-card, .social-icon, input, textarea');
+    cleanupTarget(target) {
+        if (this.currentLeaveHandler) {
+            target.removeEventListener('mouseleave', this.currentLeaveHandler);
+            this.currentLeaveHandler = null;
+        }
+    }
 
-        hoverables.forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                document.body.classList.add('cursor-hover');
+    tick() {
+        if (!this.isActive || !this.targetCornerPositions) return;
+
+        const strength = this.activeStrength.current;
+        if (strength === 0) return;
+
+        const cursorX = gsap.getProperty(this.wrapper, 'x');
+        const cursorY = gsap.getProperty(this.wrapper, 'y');
+
+        this.corners.forEach((corner, i) => {
+            const currentX = gsap.getProperty(corner, 'x');
+            const currentY = gsap.getProperty(corner, 'y');
+
+            // The reference code calculates: 
+            // targetX = targetCornerPositionsRef.current[i].x - cursorX;
+            // finalX = currentX + (targetX - currentX) * strength;
+
+            // Wait, targetCornerX is ABSOLUTE screen coord.
+            // cursorX is ABSOLUTE screen coord.
+            // So targetX (relative to cursor?) = ABS - ABS.
+            // But the corners are CHILDREN of the wrapper? 
+            // In the reference code: `transform: translate(-50%, -50%)` is on the WRAPPER.
+            // The corners use `position: absolute`.
+            // If cursor wrapper is at (100, 100), then `corner.x` (GSAP x) is relative to that?
+            // Or is GSAP handling it differently?
+            // In the Reference:
+            // <div className="target-cursor-wrapper" ref={cursorRef}> ... corners ... </div>
+            // `gsap.to(cursorRef.current, { x, y ... })` -> Wrapper moves.
+            // `gsap.to(corner, { x: finalX ... })` -> Corners move inside wrapper.
+            // So `finalX` must be RELATIVE to the wrapper center.
+
+            // Calculation:
+            // targetX (Relative) = TargetAbsX - CursorAbsX.
+            // This assumes the wrapper center is AT CursorAbsX.
+
+            const targetXRel = this.targetCornerPositions[i].x - cursorX;
+            const targetYRel = this.targetCornerPositions[i].y - cursorY;
+
+            // Current Rel:
+            // currentX is what GSAP says it is (relative valid CSS transform).
+
+            const finalX = currentX + (targetXRel - currentX) * strength;
+            const finalY = currentY + (targetYRel - currentY) * strength;
+
+            const duration = strength >= 0.99 ? (this.parallaxOn ? 0.2 : 0) : 0.05;
+
+            gsap.to(corner, {
+                x: finalX,
+                y: finalY,
+                duration: duration,
+                ease: duration === 0 ? 'none' : 'power1.out',
+                overwrite: 'auto'
             });
-            el.addEventListener('mouseleave', () => {
-                document.body.classList.remove('cursor-hover');
-            });
         });
-    }
-
-    lerp(start, end, factor) {
-        return start + (end - start) * factor;
-    }
-
-    animate() {
-        // Smooth follow with slower inertia (0.05)
-        this.ringPos.x = this.lerp(this.ringPos.x, this.mouse.x, 0.05);
-        this.ringPos.y = this.lerp(this.ringPos.y, this.mouse.y, 0.05);
-
-        // Apply transforms
-        this.ring.style.transform = `translate(${this.ringPos.x}px, ${this.ringPos.y}px) translate(-50%, -50%)`;
-
-        requestAnimationFrame(() => this.animate());
     }
 }
 
@@ -900,12 +1109,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Get ID
                 const id = entry.target.getAttribute('id');
                 let navLink;
-                
+
                 if (entry.target.classList.contains('hero')) {
-                     // Hero maps to Home
-                     navLink = document.querySelector('.nav-item[href="#"]');
+                    // Hero maps to Home
+                    navLink = document.querySelector('.nav-item[href="#"]');
                 } else {
-                     navLink = document.querySelector(`.nav-item[href="#${id}"]`);
+                    navLink = document.querySelector(`.nav-item[href="#${id}"]`);
                 }
 
                 if (navLink) {
@@ -919,9 +1128,93 @@ document.addEventListener('DOMContentLoaded', () => {
     sections.forEach(section => observer.observe(section));
     // Also observe Hero specifically if it doesn't have an ID
     const hero = document.querySelector('.hero');
-    if(hero) observer.observe(hero);
+    if (hero) observer.observe(hero);
+
 
 
     // Close nav when clicking a link logic removed (no burger menu)
+});
+
+/* 🔹 Animations Manager */
+class AnimationManager {
+    constructor() {
+        this.initScrollReveal();
+        this.initTextPressure();
+        this.initShuffleText();
+    }
+
+    /* 1. Scroll-Reveal Animation */
+    initScrollReveal() {
+        const sections = document.querySelectorAll('.reveal-section');
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    obs.unobserve(entry.target); // Fire once
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => observer.observe(section));
+    }
+
+    /* 2. Text-Pressure Animation */
+    initTextPressure() {
+        const title = document.querySelector('.hero-title');
+        if (title) {
+            title.classList.add('name-pressure');
+        }
+    }
+
+    /* 3. Shuffle Text Animation */
+    initShuffleText() {
+        const logo = document.querySelector('.brand-logo');
+        if (!logo) return;
+
+        const originalText = logo.innerText;
+        // Characters to shuffle through
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const duration = 1000; // 1s
+        let startTime = null;
+
+        const animate = (timestamp) => {
+            if (!startTime) startTime = timestamp;
+            const elapsed = timestamp - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+
+            // Calculate number of fixed characters based on progress
+            const fixedCount = Math.floor(progress * originalText.length);
+
+            let output = "";
+            for (let i = 0; i < originalText.length; i++) {
+                if (i < fixedCount) {
+                    output += originalText[i];
+                } else {
+                    // Random character for the remaining part
+                    output += chars[Math.floor(Math.random() * chars.length)];
+                }
+            }
+
+            logo.innerText = output;
+
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            } else {
+                logo.innerText = originalText; // Ensure exact final text
+            }
+        };
+
+        requestAnimationFrame(animate);
+    }
+}
+
+// Initialize Animations
+document.addEventListener('DOMContentLoaded', () => {
+    new AnimationManager();
 });
 
