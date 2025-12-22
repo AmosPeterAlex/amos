@@ -674,34 +674,79 @@ to {
 
 /* } */
 
-/* Custom Cursor */
-/* Default cursor is visible, ring follows */
+/* Custom Cursor - GSAP Target Style */
+/* Global override */
+body,
+a,
+button,
+input,
+textarea {
+    cursor: none !important;
+}
 
-.cursor-ring {
+.target-cursor-wrapper {
     position: fixed;
     top: 0;
     left: 0;
+    width: 0;
+    height: 0;
     pointer-events: none;
     z-index: 9999;
+    mix-blend-mode: difference;
+}
+
+.target-cursor-dot {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 6px;
+    background-color: white;
     border-radius: 50%;
     transform: translate(-50%, -50%);
 }
 
-.cursor-ring {
-    width: 32px;
-    height: 32px;
-    border: 1px solid var(--text-color);
-    opacity: 0.6;
-    transition: width 0.3s, height 0.3s, background-color 0.3s, border-color 0.3s;
+.target-cursor-corner {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    /* cornerSize */
+    border-style: solid;
+    border-color: white;
+    border-width: 0;
 }
 
-/* Hover State */
-.cursor-hover .cursor-ring {
-    width: 50px;
-    height: 50px;
-    background-color: rgba(128, 128, 128, 0.05);
-    /* Subtler fill */
-    border-color: var(--accent-color);
+/* 
+   We define initial corners relative to center (0,0) of the wrapper.
+   The JS will animate them.
+*/
+
+.corner-tl {
+    border-top-width: 3px;
+    border-left-width: 3px;
+    transform: translate(-150%, -150%);
+    /* -18px, -18px */
+}
+
+.corner-tr {
+    border-top-width: 3px;
+    border-right-width: 3px;
+    transform: translate(50%, -150%);
+    /* 6px, -18px */
+}
+
+.corner-br {
+    border-bottom-width: 3px;
+    border-right-width: 3px;
+    transform: translate(50%, 50%);
+    /* 6px, 6px */
+}
+
+.corner-bl {
+    border-bottom-width: 3px;
+    border-left-width: 3px;
+    transform: translate(-150%, 50%);
+    /* -18px, 6px */
 }
 
 /* Sound Toggle */
@@ -783,4 +828,42 @@ to {
     .content-section h2 {
         font-size: clamp(1.4rem, 4vw, 2rem);
     }
+}
+
+/* 🔹 1. Scroll-Reveal Animation */
+.reveal-section {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+    will-change: opacity, transform;
+}
+
+.reveal-section.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 🔹 2. Text-Pressure Animation */
+@keyframes pressure {
+    0% {
+        transform: scale(1);
+        letter-spacing: normal;
+    }
+
+    50% {
+        transform: scale(1.05);
+        letter-spacing: -3px;
+        /* Visual tightening */
+    }
+
+    100% {
+        transform: scale(1);
+        letter-spacing: normal;
+    }
+}
+
+.name-pressure {
+    display: inline-block;
+    animation: pressure 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    transform-origin: center;
 }
