@@ -1177,39 +1177,47 @@ class AnimationManager {
         if (!logo) return;
 
         const originalText = logo.innerText;
-        // Characters to shuffle through
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        const duration = 1000; // 1s
-        let startTime = null;
+        const duration = 800;
+        let animationFrameId = null;
 
-        const animate = (timestamp) => {
-            if (!startTime) startTime = timestamp;
-            const elapsed = timestamp - startTime;
-            const progress = Math.min(elapsed / duration, 1);
+        const animate = () => {
+            let startTime = null;
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
 
-            // Calculate number of fixed characters based on progress
-            const fixedCount = Math.floor(progress * originalText.length);
+            const run = (timestamp) => {
+                if (!startTime) startTime = timestamp;
+                const elapsed = timestamp - startTime;
+                const progress = Math.min(elapsed / duration, 1);
 
-            let output = "";
-            for (let i = 0; i < originalText.length; i++) {
-                if (i < fixedCount) {
-                    output += originalText[i];
-                } else {
-                    // Random character for the remaining part
-                    output += chars[Math.floor(Math.random() * chars.length)];
+                // Easing for number of fixed chars
+                const fixedCount = Math.floor(progress * originalText.length);
+
+                let output = "";
+                for (let i = 0; i < originalText.length; i++) {
+                    if (i < fixedCount) {
+                        output += originalText[i];
+                    } else {
+                        output += chars[Math.floor(Math.random() * chars.length)];
+                    }
                 }
-            }
 
-            logo.innerText = output;
+                logo.innerText = output;
 
-            if (progress < 1) {
-                requestAnimationFrame(animate);
-            } else {
-                logo.innerText = originalText; // Ensure exact final text
-            }
+                if (progress < 1) {
+                    animationFrameId = requestAnimationFrame(run);
+                } else {
+                    logo.innerText = originalText;
+                }
+            };
+            animationFrameId = requestAnimationFrame(run);
         };
 
-        requestAnimationFrame(animate);
+        // Initial trigger
+        animate();
+
+        // Hover trigger
+        logo.addEventListener('mouseenter', animate);
     }
 }
 
